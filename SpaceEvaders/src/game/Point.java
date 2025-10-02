@@ -11,7 +11,9 @@ public class Point implements Cloneable {
   public double x,y;
   public Point(double inX, double inY) { x = inX; y = inY; }
   
-  //added sjp
+  
+  // yo who wrote that comment bruh - jack
+  //added sip
   public double getX(){ return x;}
   public double getY(){ return y;}
   public void setX(double x){ this.x = x;}
