@@ -10,11 +10,11 @@ NOTE: This class is the metaphorical "main method" of your program,
 import java.awt.*;
 import java.awt.event.*;
 
-class YourGameName extends Game {
+class SpaceEvaders extends Game {
 	static int counter = 0;
 
-	public YourGameName() {
-		super("YourGameName!",800,600);
+	public SpaceEvaders() {
+		super("Space Evaders",800,600);
 		this.setFocusable(true);
 		this.requestFocus();
 	}
@@ -28,11 +28,17 @@ class YourGameName extends Game {
 		
 		counter++;
 		brush.setColor(Color.white);
-//		brush.drawString("Counter is " + counter,10,10);
-		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60), 10, 10);
+		brush.drawString("Counter is " + counter,10,10);
+		
+		/*
+		 * the comment below is just me messing with the code before we meet
+		 * officially on friday
+		 * feel free to delete it or something it doesn't do anything important
+		 */
+//		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60), 10, 10);
 	}
 	public static void main (String[] args) {
-		YourGameName a = new YourGameName();
+		SpaceEvaders a = new SpaceEvaders();
 		a.repaint();
 	}
 }
