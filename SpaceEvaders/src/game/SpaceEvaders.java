@@ -28,14 +28,14 @@ class SpaceEvaders extends Game {
 		
 		counter++;
 		brush.setColor(Color.white);
-		brush.drawString("Counter is " + counter,10,10);
+//		brush.drawString("Counter is " + counter,10,10);
 		
 		/*
 		 * the comment below is just me messing with the code before we meet
 		 * officially on friday
 		 * feel free to delete it or something it doesn't do anything important
 		 */
-//		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60), 10, 10);
+		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60), 10, 10);
 	}
 	public static void main (String[] args) {
 		SpaceEvaders a = new SpaceEvaders();
