@@ -19,7 +19,6 @@ class SpaceEvaders extends Game {
 		this.requestFocus();
 	}
 	public void paint(Graphics brush) {
-		
 		brush.setColor(Color.black);
 		brush.fillRect(0,0,width,height);
 		
