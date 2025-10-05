@@ -18,10 +18,14 @@ public class Rectangle extends Polygon {
 				position.y);
 		result[2] = new Point(
 				position.x,
-				getVectorDistance(position, rotation, WIDTH).y);
+				getVectorDistance(position, rotation + 90, WIDTH).y);
 		result[3] = new Point(
 				getVectorDistance(position, rotation, LENGTH).x,
-				getVectorDistance(position, rotation, WIDTH).y);
+				getVectorDistance(position, rotation + 90, WIDTH).y);
+		
+		for (int i = 0; i < result.length; i++) {
+			System.out.println(result[i]);
+		}
 		
 		return result;
 	}
@@ -40,17 +44,13 @@ public class Rectangle extends Polygon {
 	public void paint(Graphics brush) {
 		Point[] points = getPoints();
 		
-		for (int i = 0; i < points.length; i++) {
-			System.out.println(points[i].x);
-			System.out.println(points[i].y);
-		}
-		
 		int[] x = new int[points.length];
 		int[] y = new int[points.length];
 		
 		for (int i = 0; i < points.length; i++) {
 			x[i] = (int) Math.round(points[i].x);
 			y[i] = (int) Math.round(points[i].y);
+//			System.out.println("X: " + Integer.toString(x[i]) + ", Y: " + Integer.toString(y[i]));
 		}
 		
 		brush.drawPolygon(x, y, points.length);

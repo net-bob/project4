@@ -39,7 +39,7 @@ class SpaceEvaders extends Game {
 		 * officially on friday
 		 * feel free to delete it or something it doesn't do anything important
 		 */
-//		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60), 10, 10);
+		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60), 10, 10);
 	}
 	public static void main (String[] args) {
 		SpaceEvaders a = new SpaceEvaders();
