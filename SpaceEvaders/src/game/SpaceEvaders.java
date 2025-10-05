@@ -12,9 +12,11 @@ import java.awt.event.*;
 
 class SpaceEvaders extends Game {
 	static int counter = 0;
+	public static final int WIDTH = 800;
+	public static final int LENGTH = 600;
 
 	public SpaceEvaders() {
-		super("Space Evaders",800,600);
+		super("Space Evaders", WIDTH, LENGTH);
 		this.setFocusable(true);
 		this.requestFocus();
 	}
@@ -30,16 +32,21 @@ class SpaceEvaders extends Game {
 		brush.setColor(Color.white);
 //		brush.drawString("Counter is " + counter,10,10);
 		
-		Point a = new Point(0, 0);
-		Point b = new Point(0, 20);
-		Point c = new Point(40, 0);
-		Point d = new Point(40, 20);
-		Point[] points = {a, b, c, d};
 		
-		Polygon test = new Polygon(points, new Point(100, 100), 0);
-		for (int i = 0; i < test.getPoints().length; i++) {
-			System.out.println(test.getPoints()[i]);
+		int x = 100 + counter;
+		int y = 100;
+		
+//		brush.fillRect(x, y, 40, 20);
+		
+		int[] xC = {100, 100, 140, 140};
+		int[] yC = {100, 120, 120, 100};
+		
+		for (int i = 0; i < xC.length; i++) {
+			xC[i] += counter;
+			yC[i] += counter % 100;
 		}
+		
+		brush.fillPolygon(xC, yC, 4);
 		
 		
 		/*
