@@ -74,6 +74,14 @@ class Polygon {
   
   public void rotate(int degrees) {rotation = (rotation+degrees)%360;}
   
+  public void setPosition(Point position) {
+	  this.position = position;
+  }
+  
+  public Point getPosition() {
+	  return this.position;
+  }
+  
   /*
   The following methods are private access restricted because, as this access
   level always implies, they are intended for use only as helpers of the

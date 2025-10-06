@@ -12,11 +12,15 @@ import java.awt.event.*;
 
 class SpaceEvaders extends Game {
 	static int counter = 0;
+	static Rectangle test = new Rectangle(new Point(100, 100), 0);
+	
 
 	public SpaceEvaders() {
 		super("Space Evaders",800,600);
 		this.setFocusable(true);
 		this.requestFocus();
+		
+		this.addKeyListener(test);
 	}
 	public void paint(Graphics brush) {
 		brush.setColor(Color.black);
@@ -30,7 +34,8 @@ class SpaceEvaders extends Game {
 		brush.setColor(Color.white);
 //		brush.drawString("Counter is " + counter,10,10);
 		
-		Rectangle test = new Rectangle(new Point(100, 100), 0);
+		
+//		test.getPosition().addPoint(counter, counter);
 		test.paint(brush);
 		
 		
