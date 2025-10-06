@@ -11,17 +11,11 @@ public class Point implements Cloneable {
   public double x,y;
   public Point(double inX, double inY) { x = inX; y = inY; }
   
-  
-  // yo who wrote that comment bruh - jack
-  //added sip
+  //added sjp
   public double getX(){ return x;}
   public double getY(){ return y;}
   public void setX(double x){ this.x = x;}
   public void setY(double y){ this.y = y;}
-  
-  public String toString() {
-	  return "X: " + Double.toString(x) + ", Y:" + Double.toString(y);
-  }
   
   
   public Point clone() {
