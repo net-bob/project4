@@ -1,13 +1,299 @@
 package game;
 
-public class Spaceship extends Polygon {
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class Spaceship extends Polygon implements KeyListener{
+	
+	private static final int SIZE = 30; // Will be deprecated once Hans is done
+	private static final double ACCELRATE = 0.1;
+	private static final int ROTATERATE = 3;
+	private static final int MAXMISSILES = 400;
+	
+	private double xVel;
+	private double yVel;
+	private double xAccel;
+	private double yAccel;
+	private boolean isAccelerating;
+	private boolean isTurningLeft;
+	private boolean isTurningRight;
+	private boolean missileFired;
+	private Missile[] missiles;
+	
+	public Spaceship(Point position, double rotation) {
+		super(instantiateShape(), position, rotation);
+		xVel = 0.0;
+		yVel = 0.0;
+		xAccel = 0.0;
+		yAccel = 0.0;
+		missiles = new Missile[MAXMISSILES];
+	}
+	
+	/*
+	 * This method is passed in the origin point and constructs the rest of the
+	 * shape. Hans, your custom polygon construction code should probably go
+	 * here.
+	 */
+	private static Point[] instantiateShape() {
+		Point[] square = new Point[4];
+		square[0] = new Point(0, 0);
+		square[1] = new Point(SIZE, 0);
+		square[2] = new Point(SIZE, SIZE);
+		square[3] = new Point(0, SIZE);
+		
+		return square;
+	}
+	
+	/*
+	 * Helper method that takes a point, an angle, and a distance, and returns
+	 * the end point.
+	 */
+	private static Point getVectorDistance(Point position, double rotation,
+			double distance) {
+		return new Point(
+				position.x + (distance * Math.cos(Math.toRadians(rotation))),
+				position.y + (distance * Math.sin(Math.toRadians(rotation))));
+	}
 	
 	
+	/*
+	 * This is the code that is called every frame.
+	 * After handling movement, the polygon is drawn by extracting the x coords
+	 * and the y coords from the point array.
+	 */
+	public void paint(Graphics brush) {
+		
+		this.handleMovement();
+		
+		this.drawMissiles(brush);
+		
+		Point[] points = this.getPoints();
+		
+		int[] x = new int[points.length];
+		int[] y = new int[points.length];
+		
+		for (int i = 0; i < points.length; i++) {
+			x[i] = (int) Math.round(points[i].x);
+			y[i] = (int) Math.round(points[i].y);
+		}
+		
+		brush.drawPolygon(x, y, points.length);
+		
+	}
 	
+	/*
+	 * This method handles movement.
+	 * Every frame, the velocities are added to the current position.
+	 * Then, if the spaceship is accelerating, the accelerations are added
+	 * to their respective velocities.
+	 * 
+	 * Then, if the respective keys are being held down, the spaceship turns
+	 * accordingly.
+	 */
+	private void handleMovement() {
+		
+		this.position.addToPoint(xVel, yVel);
+		
+		if (this.isAccelerating) {
+			xAccel = ACCELRATE * Math.cos(Math.toRadians(rotation));
+			yAccel = ACCELRATE * Math.sin(Math.toRadians(rotation));
+			
+			xVel += xAccel;
+			yVel += yAccel;
+		}
+		
+		if (this.isTurningLeft) {
+			this.rotate(-ROTATERATE);
+		}
+		if (this.isTurningRight) {
+			this.rotate(ROTATERATE);
+		}
+	}
+	
+	private void fireMissile() {
+		int openMissile = canFireMissile();
+		if (openMissile != -1) {
+			missiles[openMissile] = new Spaceship.Missile(this, this.rotation);
+		}
+	}
+	
+	private int canFireMissile() {
+		for (int i = 0; i < MAXMISSILES; i++) {
+			if (missiles[i] == null) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private void drawMissiles(Graphics brush) {
+		for (int i = 0; i < MAXMISSILES; i++) {
+			if (missiles[i] != null) {
+				missiles[i].paint(brush);
+			}
+		}
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyChar() == 'w') {
+			isAccelerating = true;
+		}
+		if (e.getKeyChar() == 'a') {
+			isTurningLeft = true;
+		}
+		if (e.getKeyChar() == 'd') {
+			isTurningRight = true;
+		}
+		if (e.getKeyChar() == 's') {
+			if (!this.missileFired) {
+				this.fireMissile();
+				this.missileFired = true;
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyChar() == 'w') {
+			isAccelerating = false;
+		}
+		if (e.getKeyChar() == 'a') {
+			isTurningLeft = false;
+		}
+		if (e.getKeyChar() == 'd') {
+			isTurningRight = false;
+		}
+		if (e.getKeyChar() == 's') {
+			this.missileFired = false;
+		}
+	}
+	
+	/*
+	 * Class that handles the Missile game object
+	 */
 	private class Missile extends Polygon implements Projectile {
 		
-	}
-	private class Mine extends Polygon implements Projectile {
+		/*
+		 * These two will be deprecated when Hans is done.
+		 */
+		private static final double LENGTH = 40;
+		private static final double WIDTH = 20;
 		
+		private static final double MISSILESPAWNBUFFER = 5.0;
+		
+		private static final double MISSILEINITSPEED = 3.0;
+		
+		private double xVel;
+		private double yVel;
+		
+		/*
+		 * These acceleration variables should not be relevant until the black
+		 * hole exists, since they fly straight.
+		 */
+		private double xAccel;
+		private double yAccel;
+		
+		public Missile(Spaceship spaceship, double rotation) {
+			super(instantiateShape(), starterLocation(spaceship), rotation);
+			
+			this.xVel = MISSILEINITSPEED * Math.cos(Math.toRadians(rotation));
+			this.yVel = MISSILEINITSPEED * Math.sin(Math.toRadians(rotation));
+		}
+		
+		/*
+		 * This is the Missile's code to construct its own shape. Hans, your
+		 * missile polygon construction code should go here.
+		 */
+		private static Point[] instantiateShape() {
+			Point[] square = new Point[4];
+			
+			square[0] = new Point(0, 0);
+			square[1] = new Point(0, WIDTH);
+			square[2] = new Point(LENGTH, WIDTH);
+			square[3] = new Point(LENGTH, 0);
+	
+			return square;
+		}
+		
+		
+		/*
+		 * Current issue:
+		 * If the spaceship is a square, I am unable to spawn the missile relative
+		 * to the centers of both shapes. I am able to summon their respective
+		 * top left points relative to one another but due to how the Polygon
+		 * class works, the origin is autoselected.
+		 * 
+		 */
+		private static Point starterLocation(Spaceship spaceship) {
+			Point start = spaceship.getPoints()[0];
+			
+			start.addToPoint(getVectorDistance(new Point(0, 0),
+				spaceship.rotation, 
+				SIZE + MISSILESPAWNBUFFER)
+			);
+			
+			
+			
+			
+			System.out.println("Spaceship Points");
+			for (int i = 0; i < 4; i++) {
+				System.out.println(spaceship.getPoints()[i]);
+			}
+			System.out.println(spaceship.position);
+			System.out.println("=========");
+			
+			System.out.println(start);
+			
+			return start;
+		}
+		
+		/*
+		 * This is the code that is called every frame. This should be called
+		 * for every missile.
+		 */
+		public void paint(Graphics brush) {
+			this.handleMovement();
+			
+			Point[] points = this.getPoints();
+			
+			int[] x = new int[points.length];
+			int[] y = new int[points.length];
+			
+			for (int i = 0; i < points.length; i++) {
+				x[i] = (int) Math.round(points[i].x);
+				y[i] = (int) Math.round(points[i].y);
+			}
+			
+			brush.drawPolygon(x, y, points.length);
+		}
+		
+		/*
+		 * This code is effectively the same as the outer class' code, but with
+		 * a few minor changes. Firstly, the rotation of the missile is
+		 * determined not by player control but by the velocity of the missile.
+		 * This is to make the missile path more intuitive to understand:
+		 * if it's pointing that way, it's going that way.
+		 * 
+		 * It's also always "accelerating" but only if the black hole is in play.
+		 */
+		private void handleMovement() {
+			
+			this.rotation = Math.toDegrees(Math.atan2(this.yVel, this.xVel));
+			
+			this.position.addToPoint(this.xVel, this.yVel);
+			
+			this.xVel += this.xAccel;
+			this.yVel += this.yAccel;
+		}
 	}
+	
+	
+//	private class Mine extends Polygon implements Projectile {
+//		
+//	}	
 }

@@ -90,7 +90,7 @@ class Polygon {
   }
   
   // "findCenter" implements another bit of math.
-  private Point findCenter() {
+  protected Point findCenter() {
     Point sum = new Point(0,0);
     for (int i = 0, j = 1; i < shape.length; i++, j=(j+1)%shape.length) {
       sum.x += (shape[i].x + shape[j].x)
