@@ -232,9 +232,9 @@ public class Spaceship extends Polygon implements KeyListener{
 		private static Point starterLocation(Spaceship spaceship) {
 			Point start = spaceship.getPoints()[0];
 			
-			start.addToPoint(getVectorDistance(new Point(0, 0),
-				spaceship.rotation, 
-				SIZE + MISSILESPAWNBUFFER)
+			start.addToPoint(
+				(SIZE + MISSILESPAWNBUFFER) * Math.cos(spaceship.rotation),
+				(SIZE + MISSILESPAWNBUFFER) * Math.sin(spaceship.rotation)
 			);
 			
 			
