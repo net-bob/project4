@@ -17,7 +17,6 @@ class SpaceEvaders extends Game {
 	
 	static Spaceship test = new Spaceship(new Point(300, 300), 0);
 
-
 	public SpaceEvaders() {
 		super("Space Evaders", WIDTH, LENGTH);
 		this.setFocusable(true);
@@ -47,6 +46,11 @@ class SpaceEvaders extends Game {
 		brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60 * 5 / 3), 10, 10);	
 		counter++;
 	}
+	
+	public static int getCounter() {
+		return counter;
+	}
+	
 	public static void main (String[] args) {
 		SpaceEvaders a = new SpaceEvaders();
 		a.repaint();

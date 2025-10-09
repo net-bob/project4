@@ -45,17 +45,6 @@ public class Spaceship extends Polygon implements KeyListener{
 		return square;
 	}
 	
-	/*
-	 * Helper method that takes a point, an angle, and a distance, and returns
-	 * the end point.
-	 */
-	private static Point getVectorDistance(Point position, double rotation,
-			double distance) {
-		return new Point(
-				position.x + (distance * Math.cos(Math.toRadians(rotation))),
-				position.y + (distance * Math.sin(Math.toRadians(rotation))));
-	}
-	
 	
 	/*
 	 * This is the code that is called every frame.
@@ -78,7 +67,7 @@ public class Spaceship extends Polygon implements KeyListener{
 			y[i] = (int) Math.round(points[i].y);
 		}
 		
-		brush.drawPolygon(x, y, points.length);
+		brush.fillPolygon(x, y, points.length);
 		
 	}
 	
@@ -184,12 +173,12 @@ public class Spaceship extends Polygon implements KeyListener{
 		private static final double LENGTH = 40;
 		private static final double WIDTH = 20;
 		
-		private static final double MISSILESPAWNBUFFER = 5.0;
-		
 		private static final double MISSILEINITSPEED = 3.0;
+		private static final int SPAWNIMMUNITY = 60;
 		
 		private double xVel;
 		private double yVel;
+		private int initTime;
 		
 		/*
 		 * These acceleration variables should not be relevant until the black
@@ -200,9 +189,9 @@ public class Spaceship extends Polygon implements KeyListener{
 		
 		public Missile(Spaceship spaceship, double rotation) {
 			super(instantiateShape(), starterLocation(spaceship), rotation);
-			
 			this.xVel = MISSILEINITSPEED * Math.cos(Math.toRadians(rotation));
 			this.yVel = MISSILEINITSPEED * Math.sin(Math.toRadians(rotation));
+			this.initTime = SpaceEvaders.getCounter();
 		}
 		
 		/*
@@ -222,32 +211,18 @@ public class Spaceship extends Polygon implements KeyListener{
 		
 		
 		/*
-		 * Current issue:
-		 * If the spaceship is a square, I am unable to spawn the missile relative
-		 * to the centers of both shapes. I am able to summon their respective
-		 * top left points relative to one another but due to how the Polygon
-		 * class works, the origin is autoselected.
-		 * 
+		 * This method determines where the missile spawns relative to the
+		 * spaceship. 
 		 */
 		private static Point starterLocation(Spaceship spaceship) {
-			Point start = spaceship.getPoints()[0];
+			Point start = spaceship.position.clone();
 			
+			// Centers the missile on the center of the spaceship
 			start.addToPoint(
-				(SIZE + MISSILESPAWNBUFFER) * Math.cos(spaceship.rotation),
-				(SIZE + MISSILESPAWNBUFFER) * Math.sin(spaceship.rotation)
+				(SIZE - LENGTH) / 2,
+				(SIZE - WIDTH) / 2
 			);
 			
-			
-			
-			
-			System.out.println("Spaceship Points");
-			for (int i = 0; i < 4; i++) {
-				System.out.println(spaceship.getPoints()[i]);
-			}
-			System.out.println(spaceship.position);
-			System.out.println("=========");
-			
-			System.out.println(start);
 			
 			return start;
 		}
