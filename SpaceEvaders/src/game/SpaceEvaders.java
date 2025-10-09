@@ -15,8 +15,8 @@ class SpaceEvaders extends Game {
 	public static final int WIDTH = 800;
 	public static final int LENGTH = 600;
 	
-	static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
-	static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
+	public static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
+	public static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
 
 	public SpaceEvaders() {
 		super("Space Evaders", WIDTH, LENGTH);

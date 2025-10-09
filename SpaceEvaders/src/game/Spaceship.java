@@ -279,6 +279,15 @@ public class Spaceship extends Polygon implements KeyListener{
 		public void paint(Graphics brush) {
 			this.handleMovement();
 			
+			if (checkCollision(SpaceEvaders.thing1)
+				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
+				this.killMissile();
+			}
+			if (checkCollision(SpaceEvaders.thing2)
+				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
+				this.killMissile();
+			}
+			
 			Point[] points = this.getPoints();
 			
 			int[] x = new int[points.length];
@@ -290,6 +299,14 @@ public class Spaceship extends Polygon implements KeyListener{
 			}
 			
 			brush.drawPolygon(x, y, points.length);
+		}
+		
+		public void killMissile() {
+			for (int i = 0; i < MAXMISSILES; i++) {
+				if (missiles[i] == this) {
+					missiles[i] = null;
+				}
+			}
 		}
 		
 		/*
@@ -318,16 +335,25 @@ public class Spaceship extends Polygon implements KeyListener{
 		}
 
 		@Override
-		public boolean checkBlackHoleCollision(BlackHole blackHole) {
-			// TODO Auto-generated method stub
+		public boolean checkCollision(Polygon polygon) {
+			
+			Point[] polygonPoints = polygon.getPoints();
+			Point[] missilePoints = this.getPoints();
+			
+			for (Point point : polygonPoints) {
+				if (this.contains(point)) {
+					return true;
+				}
+			}
+			for (Point point : missilePoints) {
+				if (polygon.contains(point)) {
+					return true;
+				}
+			}
+			
 			return false;
 		}
-
-		@Override
-		public boolean checkShipCollision(Spaceship spaceship) {
-			// TODO Auto-generated method stub
-			return false;
-		}
+		
 	}
 	
 	
