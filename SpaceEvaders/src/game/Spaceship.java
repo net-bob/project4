@@ -6,11 +6,14 @@ import java.awt.event.KeyListener;
 
 public class Spaceship extends Polygon implements KeyListener{
 	
+	private static int id = 1;
+	
 	private static final int SIZE = 30; // Will be deprecated once Hans is done
 	private static final double ACCELRATE = 0.1;
 	private static final int ROTATERATE = 3;
 	private static final int MAXMISSILES = 400;
 	
+	private int player;
 	private double xVel;
 	private double yVel;
 	private double xAccel;
@@ -28,6 +31,12 @@ public class Spaceship extends Polygon implements KeyListener{
 		xAccel = 0.0;
 		yAccel = 0.0;
 		missiles = new Missile[MAXMISSILES];
+		player = id++;
+		
+		if (player == 2) {
+			this.rotate(180);
+		}
+		
 	}
 	
 	/*
@@ -129,36 +138,72 @@ public class Spaceship extends Polygon implements KeyListener{
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyChar() == 'w') {
-			isAccelerating = true;
-		}
-		if (e.getKeyChar() == 'a') {
-			isTurningLeft = true;
-		}
-		if (e.getKeyChar() == 'd') {
-			isTurningRight = true;
-		}
-		if (e.getKeyChar() == 's') {
-			if (!this.missileFired) {
-				this.fireMissile();
-				this.missileFired = true;
+		if (player == 1) {
+			if (e.getKeyChar() == 'w') {
+				isAccelerating = true;
+			}
+			if (e.getKeyChar() == 'a') {
+				isTurningLeft = true;
+			}
+			if (e.getKeyChar() == 'd') {
+				isTurningRight = true;
+			}
+			if (e.getKeyChar() == 's') {
+				if (!this.missileFired) {
+					this.fireMissile();
+					this.missileFired = true;
+				}
 			}
 		}
+		else if (player == 2) {
+			if (e.getKeyChar() == 'i') {
+				isAccelerating = true;
+			}
+			if (e.getKeyChar() == 'j') {
+				isTurningLeft = true;
+			}
+			if (e.getKeyChar() == 'l') {
+				isTurningRight = true;
+			}
+			if (e.getKeyChar() == 'k') {
+				if (!this.missileFired) {
+					this.fireMissile();
+					this.missileFired = true;
+				}
+			}
+		}
+		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (e.getKeyChar() == 'w') {
-			isAccelerating = false;
+		if (player == 1) {
+			if (e.getKeyChar() == 'w') {
+				isAccelerating = false;
+			}
+			if (e.getKeyChar() == 'a') {
+				isTurningLeft = false;
+			}
+			if (e.getKeyChar() == 'd') {
+				isTurningRight = false;
+			}
+			if (e.getKeyChar() == 's') {
+				this.missileFired = false;
+			}
 		}
-		if (e.getKeyChar() == 'a') {
-			isTurningLeft = false;
-		}
-		if (e.getKeyChar() == 'd') {
-			isTurningRight = false;
-		}
-		if (e.getKeyChar() == 's') {
-			this.missileFired = false;
+		if (player == 2) {
+			if (e.getKeyChar() == 'i') {
+				isAccelerating = false;
+			}
+			if (e.getKeyChar() == 'j') {
+				isTurningLeft = false;
+			}
+			if (e.getKeyChar() == 'l') {
+				isTurningRight = false;
+			}
+			if (e.getKeyChar() == 'k') {
+				this.missileFired = false;
+			}
 		}
 	}
 	
@@ -264,6 +309,24 @@ public class Spaceship extends Polygon implements KeyListener{
 			
 			this.xVel += this.xAccel;
 			this.yVel += this.yAccel;
+		}
+
+		@Override
+		public Point getVelocity() {
+			// TODO Auto-generated method stub
+			return new Point(xVel, yVel);
+		}
+
+		@Override
+		public boolean checkBlackHoleCollision(BlackHole blackHole) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean checkShipCollision(Spaceship spaceship) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 	

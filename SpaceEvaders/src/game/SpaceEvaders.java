@@ -15,13 +15,15 @@ class SpaceEvaders extends Game {
 	public static final int WIDTH = 800;
 	public static final int LENGTH = 600;
 	
-	static Spaceship test = new Spaceship(new Point(300, 300), 0);
+	static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
+	static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
 
 	public SpaceEvaders() {
 		super("Space Evaders", WIDTH, LENGTH);
 		this.setFocusable(true);
 		this.requestFocus();
-		this.addKeyListener(test);
+		this.addKeyListener(thing1);
+		this.addKeyListener(thing2);
 	}
 	public void paint(Graphics brush) {
 		
@@ -35,7 +37,8 @@ class SpaceEvaders extends Game {
 		
 		brush.setColor(Color.white);
 		
-		test.paint(brush);
+		thing1.paint(brush);
+		thing2.paint(brush);
 		
 		
 		/*
