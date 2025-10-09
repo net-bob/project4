@@ -19,6 +19,17 @@ public class Point implements Cloneable {
   public void setX(double x){ this.x = x;}
   public void setY(double y){ this.y = y;}
   
+  public void addToPoint(Point point) {
+	  this.x += point.x;
+	  this.y += point.y;
+  }
+  
+  public void addToPoint(double x, double y) {
+	  this.x += x;
+	  this.y += y;
+  }
+  
+  
   public String toString() {
 	  return "X: " + Double.toString(x) + ", Y:" + Double.toString(y);
   }
