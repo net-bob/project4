@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 class SpaceEvaders extends Game {
-	static int counter = 0;
+	public static int counter = 0;
 	public static final int WIDTH = 800;
 	public static final int LENGTH = 600;
 	

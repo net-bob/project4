@@ -23,6 +23,7 @@ public class Spaceship extends Polygon implements KeyListener{
 	private boolean isTurningRight;
 	private boolean missileFired;
 	private Missile[] missiles;
+	private Mine[] mines;
 	
 	public Spaceship(Point position, double rotation) {
 		super(instantiateShape(), position, rotation);
@@ -353,11 +354,52 @@ public class Spaceship extends Polygon implements KeyListener{
 			
 			return false;
 		}
-		
 	}
 	
 	
-//	private class Mine extends Polygon implements Projectile {
-//		
-//	}	
+	private class Mine extends Polygon implements Projectile {
+		
+		
+		private double xVel;
+		private double yVel;
+		private int initTime;
+		
+		
+		public Mine(Spaceship spaceship, double rotation) {
+			super(instantiateShape(), starterLocation(spaceship), rotation);
+			
+//			this.xVel = 
+//			this.yVel = 
+			this.initTime = SpaceEvaders.getCounter();
+		}
+		
+		/*
+		 * This is the Missile's code to construct its own shape. Hans, your
+		 * missile polygon construction code should go here.
+		 */
+		private static Point[] instantiateShape() {
+			Point[] points = new Point[4];
+	
+			return points;
+		}
+		
+		
+		/*
+		 * This method determines where the missile spawns relative to the
+		 * spaceship. 
+		 */
+		private static Point starterLocation(Spaceship spaceship) {
+			Point start = spaceship.position.clone();
+			
+			// Centers the missile on the center of the spaceship
+//			start.addToPoint(
+//				(SIZE - LENGTH) / 2,
+//				(SIZE - WIDTH) / 2
+//			);
+			
+			
+			return start;
+		}
+		
+	}
 }
