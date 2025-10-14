@@ -338,11 +338,13 @@ public class Spaceship extends Polygon implements KeyListener{
 				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
 				this.killMissile();
 				System.out.println("Player 2 wins");
+				SpaceEvaders.gameOver = true;
 			}
 			if (checkCollision(SpaceEvaders.thing2)
 				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
 				this.killMissile();
 				System.out.println("Player 1 wins");
+				SpaceEvaders.gameOver = true;
 			}
 			
 			Point[] points = this.getPoints();
