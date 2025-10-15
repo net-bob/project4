@@ -124,7 +124,7 @@ public class Spaceship extends Polygon implements KeyListener{
 	private void fireMine() {
 		int openMine = canFireMine();
 		if (openMine != -1) {
-			mines[openMine] = new Spaceship.Mine(this, this.rotation);
+			mines[openMine] = new Spaceship.Mine(this);
 		}
 	}
 	
@@ -148,7 +148,7 @@ public class Spaceship extends Polygon implements KeyListener{
 	private void fireMissile() {
 		int openMissile = canFireMissile();
 		if (openMissile != -1) {
-			missiles[openMissile] = new Spaceship.Missile(this, this.rotation);
+			missiles[openMissile] = new Spaceship.Missile(this);
 		}
 	}
 	
@@ -274,7 +274,7 @@ public class Spaceship extends Polygon implements KeyListener{
 		private static final double WIDTH = 20;
 		
 		private static final double MISSILEINITSPEED = 3.0;
-		private static final int SPAWNIMMUNITY = 60;
+		private static final int SPAWNIMMUNITY = 20;
 		
 		private double xVel;
 		private double yVel;
@@ -287,10 +287,29 @@ public class Spaceship extends Polygon implements KeyListener{
 		private double xAccel;
 		private double yAccel;
 		
-		public Missile(Spaceship spaceship, double rotation) {
-			super(instantiateShape(), starterLocation(spaceship), rotation);
-			this.xVel = MISSILEINITSPEED * Math.cos(Math.toRadians(rotation));
-			this.yVel = MISSILEINITSPEED * Math.sin(Math.toRadians(rotation));
+		public Missile(Spaceship spaceship) {
+			super(instantiateShape(), starterLocation(spaceship), spaceship.rotation);
+			
+			this.xVel = (MISSILEINITSPEED) * 
+			Math.cos(Math.toRadians(spaceship.rotation));
+			
+			this.yVel = (MISSILEINITSPEED) * 		
+			Math.sin(Math.toRadians(spaceship.rotation));
+			
+			double totalShipInfluence = 
+				spaceship.xVel * Math.cos(Math.toRadians(spaceship.rotation)) -
+				spaceship.yVel * Math.sin(Math.toRadians(spaceship.rotation))
+			;
+			
+			/*
+			 * Listen, I know the math for this is awful.
+			 * Do I care?
+			 * Maybe.
+			 * I think this is "good enough".
+			 */
+			xVel += totalShipInfluence * Math.cos(Math.toRadians(spaceship.rotation));
+			yVel += totalShipInfluence * Math.sin(Math.toRadians(spaceship.rotation));
+			
 			this.initTime = SpaceEvaders.getCounter();
 		}
 		
@@ -334,18 +353,6 @@ public class Spaceship extends Polygon implements KeyListener{
 		public void paint(Graphics brush) {
 			this.handleMovement();
 			
-			if (checkCollision(SpaceEvaders.thing1)
-				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
-				this.killMissile();
-				System.out.println("Player 2 wins");
-				SpaceEvaders.gameOver = true;
-			}
-			if (checkCollision(SpaceEvaders.thing2)
-				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
-				this.killMissile();
-				System.out.println("Player 1 wins");
-				SpaceEvaders.gameOver = true;
-			}
 			
 			Point[] points = this.getPoints();
 			
@@ -379,12 +386,27 @@ public class Spaceship extends Polygon implements KeyListener{
 		 */
 		private void handleMovement() {
 			
+			if (checkCollision(SpaceEvaders.thing1)
+				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
+				this.killMissile();
+				System.out.println("Player 2 wins");
+				SpaceEvaders.gameOver = true;
+			}
+			else if (checkCollision(SpaceEvaders.thing2)
+				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
+				this.killMissile();
+				System.out.println("Player 1 wins");
+				SpaceEvaders.gameOver = true;
+			}
+			
 			this.rotation = Math.toDegrees(Math.atan2(this.yVel, this.xVel));
 			
 			this.position.addToPoint(this.xVel, this.yVel);
 			
 			this.xVel += this.xAccel;
 			this.yVel += this.yAccel;
+			
+			
 		}
 
 		@Override
@@ -417,7 +439,9 @@ public class Spaceship extends Polygon implements KeyListener{
 	
 	private class Mine extends Polygon implements Projectile {
 		private static final double SIZE = 10.0;
-		private static int WINDUPTIME = 180;
+		private static final int WINDUPTIME = 180;
+		private static final double MINEINITSPEED = 2.0;
+		private static final int SPAWNIMMUNITY = 30;
 		
 		private double xVel;
 		private double yVel;
@@ -426,20 +450,18 @@ public class Spaceship extends Polygon implements KeyListener{
 		private int initTime;
 		
 		
-		public Mine(Spaceship spaceship, double rotation) {
-			super(instantiateShape(), starterLocation(spaceship), rotation);
+		public Mine(Spaceship spaceship) {
+			super(instantiateShape(), starterLocation(spaceship), spaceship.rotation);
+			this.xVel = MINEINITSPEED * Math.cos(Math.toRadians(spaceship.rotation))
+			+ spaceship.xVel;
+			this.yVel = MINEINITSPEED * Math.sin(Math.toRadians(spaceship.rotation))
+			+ spaceship.yVel;
 			
-			this.xVel = spaceship.xVel;
-			this.yVel = spaceship.yVel;
 			this.initTime = SpaceEvaders.getCounter();
 		}
 		
 		public void paint(Graphics brush) {
 			this.handleMovement();
-			
-			if (SpaceEvaders.getCounter() - initTime >= WINDUPTIME) {
-				this.killMissile();
-			}
 			
 			Point[] points = this.getPoints();
 			int[] x = new int[points.length];
@@ -454,6 +476,23 @@ public class Spaceship extends Polygon implements KeyListener{
 		}
 		
 		private void handleMovement() {
+			
+			if (SpaceEvaders.getCounter() - initTime >= WINDUPTIME) {
+				this.killMine();
+			}
+			
+			if (checkCollision(SpaceEvaders.thing1)
+				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
+				this.killMine();
+				System.out.println("Player 2 wins");
+				SpaceEvaders.gameOver = true;
+			}
+			else if (checkCollision(SpaceEvaders.thing2)
+				&& SpaceEvaders.getCounter() - initTime >= SPAWNIMMUNITY) {
+				this.killMine();
+				System.out.println("Player 1 wins");
+				SpaceEvaders.gameOver = true;
+			}
 			
 			this.position.addToPoint(this.xVel, this.yVel);
 			
@@ -493,15 +532,24 @@ public class Spaceship extends Polygon implements KeyListener{
 		 */
 		private static Point starterLocation(Spaceship spaceship) {
 			Point start = spaceship.position.clone();
+			double length = Mine.SIZE * Math.sqrt(2.0) + Mine.SIZE;
 			
 			// Centers the missile on the center of the spaceship
-//			start.addToPoint(
-//				(SIZE - LENGTH) / 2,
-//				(SIZE - WIDTH) / 2
-//			);
+			start.addToPoint(
+				(Spaceship.SIZE - length) / 2,
+				(Spaceship.SIZE - length) / 2
+			);
 			
 			
 			return start;
+		}
+		
+		public void killMine() {
+			for (int i = 0; i < MAXMINES; i++) {
+				if (mines[i] == this) {
+					mines[i] = null;
+				}
+			}
 		}
 
 		@Override
@@ -511,16 +559,21 @@ public class Spaceship extends Polygon implements KeyListener{
 
 		@Override
 		public boolean checkCollision(Polygon polygon) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
-		private void killMissile() {
-			for (int i = 0; i < MAXMINES; i++) {
-				if (mines[i] == this) {
-					mines[i] = null;
+			Point[] polygonPoints = polygon.getPoints();
+			Point[] minePoints = this.getPoints();
+			
+			for (Point point : polygonPoints) {
+				if (this.contains(point)) {
+					return true;
 				}
 			}
+			for (Point point : minePoints) {
+				if (polygon.contains(point)) {
+					return true;
+				}
+			}
+			
+			return false;
 		}
 	}
 }

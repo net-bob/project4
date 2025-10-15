@@ -12,16 +12,16 @@ import java.awt.event.*;
 
 class SpaceEvaders extends Game {
 	public static int counter = 0;
-	public static final int WIDTH = 800;
-	public static final int LENGTH = 600;
+	public static final int WIDTH = 1200;
+	public static final int LENGTH = 800;
 	
-	private static final int MAXASTEROIDS = 20;
+	
 	
 	public static boolean gameOver = false;
 	public static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
 	public static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
 	public static BlackHole blackhole = null;
-	public static Asteroid[] asteroids = new Asteroid[MAXASTEROIDS];
+	
 
 	public SpaceEvaders() {
 		super("Space Evaders", WIDTH, LENGTH);
@@ -30,6 +30,7 @@ class SpaceEvaders extends Game {
 		this.addKeyListener(thing1);
 		this.addKeyListener(thing2);
 	}
+	
 	public void paint(Graphics brush) {
 		if (!gameOver) {
 			brush.setColor(Color.black);
@@ -45,13 +46,17 @@ class SpaceEvaders extends Game {
 			thing1.paint(brush);
 			thing2.paint(brush);
 			
+			if (counter % 100 == 0) {
+				Asteroid.summonAsteroid();
+			}
+			
 			
 			/*
 			 * the comment below is just me messing with the code before we meet
 			 * officially on friday
 			 * feel free to delete it or something it doesn't do anything important
 			 */
-			brush.drawString("Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60 * 5 / 3), 10, 10);	
+			brush.drawString("Counter: " + counter + " Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60 * 5 / 3), 10, 10);	
 			counter++;
 		}
 	}
