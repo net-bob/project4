@@ -3,13 +3,14 @@ package game;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
 
-public class Spaceship extends Polygon implements KeyListener{
+public class Spaceship extends Polygon implements KeyListener, Iterable<Projectile>{
 	
 	private static final int SIZE = 30; // Will be deprecated once Hans is done
 	private static final double ACCELRATE = 0.1;
 	private static final int ROTATERATE = 3;
-	private static final int MAXMISSILES = 400;
+	private static final int MAXPROJECTILES = 400;
 	
 	private double xVel;
 	private double yVel;
@@ -19,7 +20,7 @@ public class Spaceship extends Polygon implements KeyListener{
 	private boolean isTurningLeft;
 	private boolean isTurningRight;
 	private boolean missileFired;
-	private Missile[] missiles;
+	private Projectile[] firedProjectiles;
 	
 	public Spaceship(Point position, double rotation) {
 		super(instantiateShape(), position, rotation);
@@ -27,7 +28,7 @@ public class Spaceship extends Polygon implements KeyListener{
 		yVel = 0.0;
 		xAccel = 0.0;
 		yAccel = 0.0;
-		missiles = new Missile[MAXMISSILES];
+		firedProjectiles = new Projectile[MAXPROJECTILES];
 	}
 	
 	/*
@@ -36,13 +37,8 @@ public class Spaceship extends Polygon implements KeyListener{
 	 * here.
 	 */
 	private static Point[] instantiateShape() {
-		Point[] square = new Point[4];
-		square[0] = new Point(0, 0);
-		square[1] = new Point(SIZE, 0);
-		square[2] = new Point(SIZE, SIZE);
-		square[3] = new Point(0, SIZE);
-		
-		return square;
+		Point[] shape = {new Point(0,0), new Point(2,0), new Point(1,1), new Point(3,1), new Point(4,2), new Point(3,3), new Point(1,3), new Point(2,4), new Point(0,4), new Point(0,0)};
+		return shape;
 	}
 	
 	
@@ -103,13 +99,13 @@ public class Spaceship extends Polygon implements KeyListener{
 	private void fireMissile() {
 		int openMissile = canFireMissile();
 		if (openMissile != -1) {
-			missiles[openMissile] = new Spaceship.Missile(this, this.rotation);
+			firedProjectiles[openMissile] = new Spaceship.Missile(this, this.rotation);
 		}
 	}
 	
 	private int canFireMissile() {
-		for (int i = 0; i < MAXMISSILES; i++) {
-			if (missiles[i] == null) {
+		for (int i = 0; i < MAXPROJECTILES; i++) {
+			if (firedProjectiles[i] == null) {
 				return i;
 			}
 		}
@@ -117,9 +113,9 @@ public class Spaceship extends Polygon implements KeyListener{
 	}
 	
 	private void drawMissiles(Graphics brush) {
-		for (int i = 0; i < MAXMISSILES; i++) {
-			if (missiles[i] != null) {
-				missiles[i].paint(brush);
+		for (int i = 0; i < MAXPROJECTILES; i++) {
+			if (firedProjectiles[i] != null) {
+				((Missile)firedProjectiles[i]).paint(brush);
 			}
 		}
 	}
@@ -199,14 +195,8 @@ public class Spaceship extends Polygon implements KeyListener{
 		 * missile polygon construction code should go here.
 		 */
 		private static Point[] instantiateShape() {
-			Point[] square = new Point[4];
-			
-			square[0] = new Point(0, 0);
-			square[1] = new Point(0, WIDTH);
-			square[2] = new Point(LENGTH, WIDTH);
-			square[3] = new Point(LENGTH, 0);
-	
-			return square;
+			Point[] shape = {new Point(0,0), new Point(4,0), new Point(3,1), new Point(3,4), new Point(2,5), new Point(1,4), new Point(1,1), new Point(0,0)};	
+			return shape;
 		}
 		
 		
@@ -268,7 +258,61 @@ public class Spaceship extends Polygon implements KeyListener{
 	}
 	
 	
-//	private class Mine extends Polygon implements Projectile {
-//		
-//	}	
+	//comments for this iterator must explicitly state that it mutates as it traverses...
+	@Override
+	public Iterator<Projectile> iterator() {
+		Iterator<Projectile> it = new Iterator<Projectile>() { 
+			int pos = 0; //so basically u call the next method manually and never use a for in enhaced for loop and it iterates to the next null after rmemoving any out of bounds missiles and then u just use the pos instance var to set that null value to a new missile; essentially the next method only serves to iterate the pos instance to the next null elemnt rather than returning the next null elemnt...
+			public boolean hasNext() {
+				eraseOutOfBoundsProjectiles();
+				if(pos < MAXPROJECTILES && hasNullsAfter(pos)) {
+					return true;
+				}
+				return false;
+			}
+			public Projectile next() {
+				eraseOutOfBoundsProjectiles();
+				pos++;
+				while(firedProjectiles[pos] != null) {
+					pos++;
+				}
+				return firedProjectiles[pos];
+			}
+			
+			private boolean hasNullsAfter(int pos) {
+				for(int i = pos; i < firedProjectiles.length; i++) {
+					if(firedProjectiles[i] == null) {
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			public void eraseOutOfBoundsProjectiles() {
+				for(int i = 0; i < firedProjectiles.length; i++) {
+					if(!firedProjectiles[i].checkCollision(getBorderHitbox())) { //how can I access this method from the space evaders class?
+						firedProjectiles[i] = null;
+					}
+				}
+			}
+		};
+		return it;
+	}
+	
+	
+	private class Mine extends Polygon implements Projectile {
+		public Mine() {
+			super(instantiateShape(), Spaceship.position, Spaceship.roatation);
+			this.scalePolygon(7);
+		}
+		
+		private static Point[] instantiateShape() {
+			Point[] shape = {new Point(1,0), new Point(3,0), new Point(4,1), new Point(4,3), new Point(3,4), new Point(1,4), new Point(0,3), new Point(0,1), new Point(1,0)};
+			return shape;
+		}
+		
+		
+	}
+	
+	
 }

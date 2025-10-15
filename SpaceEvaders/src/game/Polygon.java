@@ -57,6 +57,15 @@ class Polygon {
     return points;
   }
   
+  public void scalePolygon(int scalar) {//makes stuff off center... figure out how to fix that?
+	  for(int i = 0; i < shape.length; i++) {
+		  shape[i] = new Point(shape[i].getX() * scalar, shape[i].getY() * scalar);
+	  }
+	  //shape = getPoints();   <- figure out how to re-center the dilated polygon...
+	  
+  }
+  
+  
   // "contains" implements some magical math (i.e. the ray-casting algorithm).
   public boolean contains(Point point) {
     Point[] points = getPoints();
