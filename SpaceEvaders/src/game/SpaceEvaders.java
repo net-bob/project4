@@ -14,9 +14,9 @@ class SpaceEvaders extends Game {
 	public static int counter = 0;
 	public static final int WIDTH = 1200;
 	public static final int LENGTH = 800;
-	
-	
-	
+
+	private BorderGenerator borderGen;
+	private static Polygon borderHitbox;
 	public static boolean gameOver = false;
 	public static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
 	public static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
@@ -27,8 +27,23 @@ class SpaceEvaders extends Game {
 		super("Space Evaders", WIDTH, LENGTH);
 		this.setFocusable(true);
 		this.requestFocus();
+		
+		borderGen = (Graphics brush) -> {
+			int[] XCoords = {50, 750, 750, 50};
+			int[] YCoords = {50, 50, 550, 550};
+
+			brush.setColor(Color.BLUE);
+			brush.drawPolygon(XCoords, YCoords, 4);
+		};
+		Point[] shape = {new Point(50,50), new Point(750,50), new Point(750, 550), new Point(50,550)};
+		borderHitbox = new Polygon(shape, new Point(400,300), 0);
+		
 		this.addKeyListener(thing1);
 		this.addKeyListener(thing2);
+	}
+	
+	public static Polygon getBorderHitbox() {
+		return borderHitbox;
 	}
 	
 	public void paint(Graphics brush) {
@@ -39,10 +54,9 @@ class SpaceEvaders extends Game {
 			// sample code for printing message for debugging
 			// counter is incremented and this message printed
 			// each time the canvas is repainted
-			
+			borderGen.generateBorder(brush);
 			
 			brush.setColor(Color.white);
-			
 			thing1.paint(brush);
 			thing2.paint(brush);
 			

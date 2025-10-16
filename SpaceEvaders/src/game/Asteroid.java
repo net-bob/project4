@@ -16,24 +16,18 @@ public class Asteroid extends Polygon implements Projectile {
 	private double xAccel;
 	private double yAccel;
 	private int rotationAmount;
+	private Polygon hitbox;
 	
 
 	public Asteroid() {
 		super(instantiateShape(), startPosition(), (int)(Math.random() * (361)));
 		rotationAmount = (int) (Math.random() * 2) + 1;
+		hitbox = new Polygon(instantiateShape(), this.position, this.rotation);
 	}
 	
-	private static Point[] instantiateShape() {
-		Point[] points = new Point[360];
-		
-		for (int i = 0; i < 360; i++) {
-			points[i] = new Point(
-				RADIUS * Math.cos(Math.toRadians(i)),
-				RADIUS * Math.sin(Math.toRadians(i))
-			);
-		}
-		
-		return points;
+	private static Point[] instantiateShape(){
+		Point[] shape = {new Point(1,0), new Point(3,0), new Point(4,1), new Point(4,3), new Point(2,7), new Point(0,3), new Point(0,1), new Point(1,0)};
+		return shape;
 	}
 	
 	private static Point startPosition() {
