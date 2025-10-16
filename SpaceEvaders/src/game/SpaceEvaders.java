@@ -17,13 +17,13 @@ class SpaceEvaders extends Game {
 	public static final int LENGTH = 600;
 	private BorderGenerator borderGen;
 	private Polygon borderHitbox;
-	static Spaceship test = new Spaceship(new Point(300, 300), 0);
-	
+	static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
+	static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
+
 	public SpaceEvaders() {
 		super("Space Evaders", WIDTH, LENGTH);
 		this.setFocusable(true);
 		this.requestFocus();
-		this.addKeyListener(test);
 		borderGen = (Graphics brush) -> {
 			int[] XCoords = {50, 750, 750, 50};
 			int[] YCoords = {50, 50, 550, 550};
@@ -33,7 +33,8 @@ class SpaceEvaders extends Game {
 		};
 		Point[] shape = {new Point(50,50), new Point(750,50), new Point(750, 550), new Point(50,550)};
 		borderHitbox = new Polygon(shape, new Point(400,300), 0);
-		
+		this.addKeyListener(thing1);
+		this.addKeyListener(thing2);
 	}
 	
 	public Polygon getBorderHitbox() {
@@ -50,8 +51,8 @@ class SpaceEvaders extends Game {
 		borderGen.generateBorder(brush);
 		
 		brush.setColor(Color.white);
-	
-		test.paint(brush);
+		thing1.paint(brush);
+		thing2.paint(brush);
 		
 		Asteroid ast = new Asteroid();//please turn this process into a method in polygon!!!!!!
 		int[] x = new int[ast.getPoints().length];
