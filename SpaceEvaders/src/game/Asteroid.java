@@ -4,10 +4,11 @@ import java.awt.Graphics;
 
 public class Asteroid extends Polygon implements Projectile {
 	
-	// FOR NOW ITS A CIRCLE
-	private static final double RADIUS = 20.0;
+	private static final int SIZE = 14;
 	
 	private static final int MAXASTEROIDS = 20;
+	
+	private static final int INITSPEED = 3;
 	
 	public static Asteroid[] asteroids = new Asteroid[MAXASTEROIDS];
 	
@@ -15,25 +16,48 @@ public class Asteroid extends Polygon implements Projectile {
 	private double yVel;
 	private double xAccel;
 	private double yAccel;
-	private int rotationAmount;
 	private Polygon hitbox;
 	
 
 	public Asteroid() {
-		super(instantiateShape(), startPosition(), (int)(Math.random() * (361)));
-		rotationAmount = (int) (Math.random() * 2) + 1;
+		super(instantiateShape(), startPosition(), 0);
+		if (this.position.y == 0) {
+			// Top wall
+			this.rotation = (int)(Math.random() * 181);
+		}
+		else if (this.position.y == SpaceEvaders.LENGTH) {
+			// Bottom wall
+			this.rotation = (int)(Math.random() * 181) + 180;
+		}
+		else if (this.position.x == 0) {
+			// Left wall
+			this.rotation = (int)(Math.random() * 181) - 90;
+		}
+		else if (this.position.x == SpaceEvaders.WIDTH) {
+			// Right wall
+			this.rotation = ((int)Math.random() * 181) + 90;
+		}
+		
+		xVel = INITSPEED * Math.cos(Math.toRadians(rotation));
+		yVel = INITSPEED * Math.sin(Math.toRadians(rotation));
+
 		hitbox = new Polygon(instantiateShape(), this.position, this.rotation);
 	}
 	
 	private static Point[] instantiateShape(){
-		Point[] shape = {new Point(1,0), new Point(3,0), new Point(4,1), new Point(4,3), new Point(2,7), new Point(0,3), new Point(0,1), new Point(1,0)};
+		Point[] shape = {
+			new Point(SIZE / 7, 0), new Point(SIZE * 3/7, 0),
+			new Point(SIZE * 4/7, SIZE / 7), new Point(SIZE * 4/7, SIZE* 3/7),
+			new Point(SIZE * 2/7, SIZE), new Point(0, SIZE * 3/7),
+			new Point(0,SIZE / 7), new Point(SIZE / 7,0)
+		};
 		return shape;
 	}
 	
 	private static Point startPosition() {
 		Point start;
 		int whichBorder = (int) (Math.random() * 4) + 1;
-		int direction;
+		
 		/*
 		 * 1 is up
 		 * 2 is right
@@ -46,9 +70,6 @@ public class Asteroid extends Polygon implements Projectile {
 					(Math.random() * SpaceEvaders.WIDTH + 1),
 					0
 			);
-			direction = (int) (Math.random() * 180);
-			
-			
 		}
 		else if (whichBorder == 2) {
 			start = new Point(
@@ -115,13 +136,31 @@ public class Asteroid extends Polygon implements Projectile {
 		brush.fillPolygon(x, y, points.length);
 	}
 	
+	private static void killAsteroid(Asteroid asteroid) {
+		for (int i = 0; i < MAXASTEROIDS; i++) {
+			if (asteroids[i] == asteroid) {
+				asteroids[i] = null;
+			}
+		}
+	}
+	
 	private void handleMovement() {
+		
+		if (checkCollision(SpaceEvaders.thing1)) {
+			killAsteroid(this);
+			System.out.println("Player 2 wins");
+			SpaceEvaders.gameOver = true;
+		}
+		else if (checkCollision(SpaceEvaders.thing2)) {
+			killAsteroid(this);
+			System.out.println("Player 1 wins");
+			SpaceEvaders.gameOver = true;
+		}
+		
 		this.position.addToPoint(xVel, yVel);
 		
 		xVel += xAccel;
 		yVel += yAccel;
-		
-		this.rotation += rotationAmount;
 	}
 
 	@Override
@@ -131,7 +170,20 @@ public class Asteroid extends Polygon implements Projectile {
 
 	@Override
 	public boolean checkCollision(Polygon polygon) {
-		// TODO Auto-generated method stub
+		Point[] polygonPoints = polygon.getPoints();
+		Point[] asteroidPoints = this.getPoints();
+		
+		for (Point point : polygonPoints) {
+			if (this.contains(point)) {
+				return true;
+			}
+		}
+		for (Point point : asteroidPoints) {
+			if (polygon.contains(point)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	

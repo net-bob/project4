@@ -5,20 +5,23 @@ import java.awt.Graphics;
 
 public class BlackHole extends Polygon {
 
+	private static final int SIZE = 10;
+	
 	private Polygon hitbox;
 	int counter = 0;
 	
 	public BlackHole() {
 		super(instantiateShape(), new Point(400,300), 0);
-		this.scalePolygon(10);
-		Point[] shape = {new Point(1,0), new Point(3,0), new Point(4,1), new Point(4,3), new Point(3,4), new Point(1,4), new Point(0,3), new Point(0,1), new Point(1,0)};
+//		this.scalePolygon(10);
+		Point[] shape = {
+			new Point(1,0), new Point(3,0), new Point(4,1), new Point(4,3), new Point(3,4), new Point(1,4), new Point(0,3), new Point(0,1), new Point(1,0)};
 		hitbox = new Polygon(shape, this.findCenter(), this.rotation);
-		hitbox.scalePolygon(10);
 		
 	}
 
 	private static Point[] instantiateShape() {
-		Point[] shape = {new Point(2,2), new Point(5,3), new Point(6,0), new Point(7,3), new Point(10,2), new Point(9,5), new Point(12,6), new Point(9,7), new Point(10,10), new Point(7,9), new Point(6,12), new Point(5,9), new Point(2,10), new Point(3,7), new Point(0,6), new Point(3,5)};
+		Point[] shape = {
+			new Point(2,2), new Point(5,3), new Point(6,0), new Point(7,3), new Point(10,2), new Point(9,5), new Point(12,6), new Point(9,7), new Point(10,10), new Point(7,9), new Point(6,12), new Point(5,9), new Point(2,10), new Point(3,7), new Point(0,6), new Point(3,5)};
 		return shape;
 	}
 	

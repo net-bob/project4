@@ -13,7 +13,7 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	private static final int SIZE = 40;
 	private static final double ACCELRATE = 0.1;
 	private static final int ROTATERATE = 3;
-	private static final int MAXPROJECTILES = 400;
+	private static final int MAXPROJECTILES = 10;
 	
 	private int player;
 	private double xVel;
@@ -302,14 +302,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	 */
 	private class Missile extends Polygon implements Projectile {
 		
-		/*
-		 * These two will be deprecated when Hans is done.
-		 */
+		
 		private static final double LENGTH = 25;
 		private static final double WIDTH = 20;
 		
 		private static final double MISSILEINITSPEED = 3.0;
-		private static final int SPAWNIMMUNITY = 20;
+		private static final int SPAWNIMMUNITY = 25;
 		
 		private double xVel;
 		private double yVel;
@@ -357,7 +355,7 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 				new Point(0, 0), new Point(LENGTH / 5, WIDTH / 4), 
 				new Point(LENGTH * 4/5, WIDTH / 4), new Point(LENGTH, WIDTH / 2),
 				new Point(LENGTH * 4/5, WIDTH * 3/4), 
-				new Point(LENGTH / 5, WIDTH * 3/4),
+				new Point(LENGTH / 5, WIDTH * 3/4), 
 				new Point(0, WIDTH)
 			};
 			return shape;

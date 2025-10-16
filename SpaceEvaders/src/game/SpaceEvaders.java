@@ -12,8 +12,8 @@ import java.awt.event.*;
 
 class SpaceEvaders extends Game {
 	public static int counter = 0;
-	public static final int WIDTH = 1200;
-	public static final int LENGTH = 800;
+	public static final int WIDTH = 800;
+	public static final int LENGTH = 600;
 
 	private BorderGenerator borderGen;
 	private static Polygon borderHitbox;
@@ -62,6 +62,12 @@ class SpaceEvaders extends Game {
 			
 			if (counter % 100 == 0) {
 				Asteroid.summonAsteroid();
+			}
+			
+			for (Asteroid i : Asteroid.asteroids) {
+				if (i != null) {
+					i.paint(brush);
+				}
 			}
 			
 			
