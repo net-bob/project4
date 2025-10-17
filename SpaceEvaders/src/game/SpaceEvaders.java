@@ -12,12 +12,12 @@ import java.awt.*;
 @SuppressWarnings("serial")
 class SpaceEvaders extends Game {
 	public static int counter = 0;
-	public static final int WIDTH = 800;
-	public static final int LENGTH = 600;
+	public static final int WIDTH = 1200;
+	public static final int LENGTH = 900;
 	
 	private static final int TIMESPAWNASTEROID = 1500;
 	private static final int TIMESPAWNBLACKHOLE = 1000;
-
+	
 	private BorderGenerator borderGen;
 	private static Polygon borderHitbox;
 	public static boolean gameOver = false;
@@ -33,8 +33,8 @@ class SpaceEvaders extends Game {
 		this.requestFocus();
 		
 		borderGen = (Graphics brush) -> {
-			int[] XCoords = {50, 750, 750, 50};
-			int[] YCoords = {50, 50, 550, 550};
+			int[] XCoords = {50, WIDTH - 50, WIDTH - 50, 50};
+			int[] YCoords = {50, 50, LENGTH -  50, LENGTH -  50};
 
 			brush.setColor(Color.BLUE);
 			brush.drawPolygon(XCoords, YCoords, 4);
