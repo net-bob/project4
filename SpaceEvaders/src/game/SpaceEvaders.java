@@ -62,7 +62,7 @@ class SpaceEvaders extends Game {
 			
 			borderGen.generateBorder(brush);
 			
-			brush.setColor(Color.white);
+			
 			thing1.paint(brush);
 			thing2.paint(brush);
 			

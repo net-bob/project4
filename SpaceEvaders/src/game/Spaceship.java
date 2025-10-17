@@ -85,7 +85,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			y[i] = (int) Math.round(points[i].y);
 		}
 		
-		brush.setColor(Color.WHITE);
+		if (player == 1) {
+			brush.setColor(Color.BLUE);
+		}
+		else if (player == 2) {
+			brush.setColor(Color.RED);
+		}
 		brush.fillPolygon(x, y, points.length);
 		
 	}
