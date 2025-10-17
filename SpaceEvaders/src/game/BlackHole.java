@@ -2,32 +2,47 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class BlackHole extends Polygon {
-
 	private static final int SIZE = 10;
 	
+	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
 	int counter = 0;
 	
 	public BlackHole() {
-		super(instantiateShape(), new Point(400,300), 0);
+		super(instantiateShape(), new Point(SpaceEvaders.WIDTH / 2, SpaceEvaders.LENGTH / 2), 0);
 //		this.scalePolygon(10);
 		Point[] shape = {
-			new Point(1,0), new Point(3,0), new Point(4,1), new Point(4,3), new Point(3,4), new Point(1,4), new Point(0,3), new Point(0,1), new Point(1,0)};
+			new Point(SIZE, 0), new Point(3 * SIZE, 0), new Point(4 * SIZE, SIZE),
+			new Point(4 * SIZE, 3 * SIZE), new Point(3 * SIZE, 4 * SIZE),
+			new Point(SIZE, 4 * SIZE), new Point(0, 3 * SIZE), new Point(0, SIZE),
+			new Point(SIZE, 0)};
 		hitbox = new Polygon(shape, this.findCenter(), this.rotation);
 		
 	}
 
 	private static Point[] instantiateShape() {
 		Point[] shape = {
-			new Point(2,2), new Point(5,3), new Point(6,0), new Point(7,3), new Point(10,2), new Point(9,5), new Point(12,6), new Point(9,7), new Point(10,10), new Point(7,9), new Point(6,12), new Point(5,9), new Point(2,10), new Point(3,7), new Point(0,6), new Point(3,5)};
+			new Point(2 * SIZE, 2 * SIZE), new Point(5 * SIZE, 3 * SIZE),
+			new Point(6 * SIZE, 0), new Point(7 * SIZE, 3 * SIZE), 
+			new Point(10 * SIZE, 2 * SIZE), new Point(9 * SIZE, 5 * SIZE),
+			new Point(12 * SIZE, 6 * SIZE), new Point(9 * SIZE, 7 * SIZE),
+			new Point(10 * SIZE, 10 * SIZE), new Point(7 * SIZE, 9 * SIZE),
+			new Point(6 * SIZE, 12 * SIZE), new Point(5 * SIZE, 9 * SIZE),
+			new Point(2 * SIZE, 10 * SIZE), new Point(3 * SIZE, 7 * SIZE), 
+			new Point(0,6 * SIZE), new Point(3 * SIZE, 5 * SIZE)
+		};
 		return shape;
 	}
 	
 	public void paint(Graphics brush) {
-		counter++; //erase later
-		this.rotate(counter);//use get counter from space evaders class
+		
+		System.out.println(objects);
+		
+		this.rotate(SpaceEvaders.getCounter());
+		
 		int[] x2 = new int[this.getPoints().length];
 		int[] y2 = new int[this.getPoints().length];
 		for(int i = 0; i < x2.length; i++) {

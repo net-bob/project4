@@ -105,7 +105,9 @@ public class Asteroid extends Polygon implements Projectile {
 	public static void summonAsteroid() {
 		int openAsteroid = findOpenAsteroid();
 		if (openAsteroid != -1) {
-			asteroids[openAsteroid] = new Asteroid();
+			Asteroid asteroid = new Asteroid();
+			asteroids[openAsteroid] = asteroid;
+			BlackHole.objects.add(asteroid);
 		}
 	}
 	
@@ -142,6 +144,7 @@ public class Asteroid extends Polygon implements Projectile {
 				asteroids[i] = null;
 			}
 		}
+		BlackHole.objects.remove(asteroid);
 	}
 	
 	private void handleMovement() {

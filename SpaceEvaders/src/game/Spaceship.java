@@ -122,14 +122,18 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	private void fireMine() {
 		int openMine = canFireProjectile();
 		if (openMine != -1) {
-			projectiles[openMine] = new Spaceship.Mine(this);
+			Mine newMine = new Spaceship.Mine(this);
+			projectiles[openMine] = newMine;
+			BlackHole.objects.add(newMine);
 		}
 	}
 	
 	private void fireMissile() {
 		int openMissile = canFireProjectile();
 		if (openMissile != -1) {
-			projectiles[openMissile] = new Spaceship.Missile(this);
+			Missile newMissile = new Spaceship.Missile(this);
+			projectiles[openMissile] = newMissile;
+			BlackHole.objects.add(newMissile);
 		}
 	}
 	
@@ -147,6 +151,9 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			if (projectiles[i] == projectile) {
 				projectiles[i] = null;
 			}
+		}
+		if (projectile instanceof Polygon) {
+			BlackHole.objects.remove((Polygon)projectile);
 		}
 	}
 	

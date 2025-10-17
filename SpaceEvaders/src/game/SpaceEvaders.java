@@ -40,6 +40,9 @@ class SpaceEvaders extends Game {
 		
 		this.addKeyListener(thing1);
 		this.addKeyListener(thing2);
+		
+		BlackHole.objects.add(thing1);
+		BlackHole.objects.add(thing1);
 	}
 	
 	public static Polygon getBorderHitbox() {
@@ -54,6 +57,7 @@ class SpaceEvaders extends Game {
 			// sample code for printing message for debugging
 			// counter is incremented and this message printed
 			// each time the canvas is repainted
+			
 			borderGen.generateBorder(brush);
 			
 			brush.setColor(Color.white);
@@ -62,6 +66,13 @@ class SpaceEvaders extends Game {
 			
 			if (counter % 100 == 0) {
 				Asteroid.summonAsteroid();
+			}
+			
+			if (counter == 1000) {
+				blackhole = new BlackHole();
+			}
+			if (counter >= 1000) {
+				blackhole.paint(brush);
 			}
 			
 			for (Asteroid i : Asteroid.asteroids) {
