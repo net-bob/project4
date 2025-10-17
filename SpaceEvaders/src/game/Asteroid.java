@@ -10,6 +10,8 @@ public class Asteroid extends Polygon implements Projectile {
 	
 	private static final int INITSPEED = 3;
 	
+	private static final int LIFETIME = 200;
+	
 	public static Asteroid[] asteroids = new Asteroid[MAXASTEROIDS];
 	
 	private double xVel;
@@ -17,6 +19,7 @@ public class Asteroid extends Polygon implements Projectile {
 	private double xAccel;
 	private double yAccel;
 	private Polygon hitbox;
+	private int initTime;
 	
 
 	public Asteroid() {
@@ -40,6 +43,8 @@ public class Asteroid extends Polygon implements Projectile {
 		
 		xVel = INITSPEED * Math.cos(Math.toRadians(rotation));
 		yVel = INITSPEED * Math.sin(Math.toRadians(rotation));
+		
+		initTime = SpaceEvaders.getCounter();
 
 		hitbox = new Polygon(instantiateShape(), this.position, this.rotation);
 	}
@@ -146,6 +151,9 @@ public class Asteroid extends Polygon implements Projectile {
 	
 	private void handleMovement() {
 		
+		if (SpaceEvaders.getCounter() - initTime >= LIFETIME) {
+			killAsteroid(this);
+		}
 		if (checkCollision(SpaceEvaders.thing1)) {
 			killAsteroid(this);
 			System.out.println("Player 2 wins");
@@ -155,6 +163,10 @@ public class Asteroid extends Polygon implements Projectile {
 			killAsteroid(this);
 			System.out.println("Player 1 wins");
 			SpaceEvaders.gameOver = true;
+		}
+		else if (SpaceEvaders.blackhole != null && 
+				checkCollision(SpaceEvaders.blackhole.getHitbox())) {
+			killAsteroid(this);
 		}
 		
 		this.position.addToPoint(xVel, yVel);

@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class BlackHole extends Polygon {
-	private static final int SIZE = 10;
+	private static final int SIZE = 1;
 	
 	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
@@ -13,7 +13,6 @@ public class BlackHole extends Polygon {
 	
 	public BlackHole() {
 		super(instantiateShape(), new Point(SpaceEvaders.WIDTH / 2, SpaceEvaders.LENGTH / 2), 0);
-//		this.scalePolygon(10);
 		Point[] shape = {
 			new Point(SIZE, 0), new Point(3 * SIZE, 0), new Point(4 * SIZE, SIZE),
 			new Point(4 * SIZE, 3 * SIZE), new Point(3 * SIZE, 4 * SIZE),

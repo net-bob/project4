@@ -14,6 +14,8 @@ class SpaceEvaders extends Game {
 	public static int counter = 0;
 	public static final int WIDTH = 800;
 	public static final int LENGTH = 600;
+	
+	private static final int TIMESPAWNBLACKHOLE = 10;
 
 	private BorderGenerator borderGen;
 	private static Polygon borderHitbox;
@@ -21,6 +23,7 @@ class SpaceEvaders extends Game {
 	public static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
 	public static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
 	public static BlackHole blackhole = null;
+	
 	
 
 	public SpaceEvaders() {
@@ -35,7 +38,8 @@ class SpaceEvaders extends Game {
 			brush.setColor(Color.BLUE);
 			brush.drawPolygon(XCoords, YCoords, 4);
 		};
-		Point[] shape = {new Point(50,50), new Point(750,50), new Point(750, 550), new Point(50,550)};
+		Point[] shape = {new Point(50,50), new Point(750,50), new Point(750, 550), 
+		new Point(50,550)};
 		borderHitbox = new Polygon(shape, new Point(400,300), 0);
 		
 		this.addKeyListener(thing1);
@@ -68,10 +72,10 @@ class SpaceEvaders extends Game {
 				Asteroid.summonAsteroid();
 			}
 			
-			if (counter == 1000) {
+			if (counter == TIMESPAWNBLACKHOLE) {
 				blackhole = new BlackHole();
 			}
-			if (counter >= 1000) {
+			if (counter >= TIMESPAWNBLACKHOLE) {
 				blackhole.paint(brush);
 			}
 			

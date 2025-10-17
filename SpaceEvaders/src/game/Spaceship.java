@@ -430,6 +430,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 				System.out.println("Player 1 wins");
 				SpaceEvaders.gameOver = true;
 			}
+			else if (SpaceEvaders.blackhole != null && 
+					checkCollision(SpaceEvaders.blackhole.getHitbox())) {
+				killProjectile(this);
+			}
 			
 			this.rotation = Math.toDegrees(Math.atan2(this.yVel, this.xVel));
 			
@@ -524,6 +528,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 				killProjectile(this);
 				System.out.println("Player 1 wins");
 				SpaceEvaders.gameOver = true;
+			}
+			else if (SpaceEvaders.blackhole != null && 
+					checkCollision(SpaceEvaders.blackhole.getHitbox())) {
+				killProjectile(this);
 			}
 			
 			this.position.addToPoint(this.xVel, this.yVel);
