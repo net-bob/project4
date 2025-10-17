@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Asteroid extends Polygon implements Projectile {
 	
-	private static final int SIZE = 14;
+	private static final int SIZE = 24;
 	
 	private static final int MAXASTEROIDS = 20;
 	
@@ -47,7 +47,8 @@ public class Asteroid extends Polygon implements Projectile {
 		
 		initTime = SpaceEvaders.getCounter();
 
-		hitbox = new Polygon(instantiateShape(), this.position, this.rotation);
+		hitbox = this;
+		//hitbox = new Polygon(instantiateShape(), this.position, this.rotation);
 	}
 	
 	private static Point[] instantiateShape(){
@@ -138,7 +139,7 @@ public class Asteroid extends Polygon implements Projectile {
 			y[i] = (int) Math.round(points[i].y);
 		}
 		
-		brush.setColor(Color.WHITE);
+		brush.setColor(Color.ORANGE);
 		brush.fillPolygon(x, y, points.length);
 	}
 	
@@ -180,6 +181,10 @@ public class Asteroid extends Polygon implements Projectile {
 	@Override
 	public Point getVelocity() {
 		return new Point(xVel, yVel);
+	}
+	
+	public Polygon getHitbox() {
+		return hitbox;
 	}
 
 	@Override

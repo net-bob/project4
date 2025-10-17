@@ -26,9 +26,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	private boolean missileFired;
 	private boolean mineFired;
 	private Projectile[] projectiles;
+	private Polygon hitbox;
 	
 	public Spaceship(Point position, double rotation) {
 		super(instantiateShape(), position, rotation);
+		hitbox = this;
 		xVel = 0.0;
 		yVel = 0.0;
 		xAccel = 0.0;
@@ -40,6 +42,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			this.rotate(180);
 		}
 		
+	}
+	
+	public Polygon getHitbox() {
+		return hitbox;
 	}
 	
 	/*

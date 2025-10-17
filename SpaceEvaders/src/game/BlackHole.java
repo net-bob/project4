@@ -12,13 +12,14 @@ public class BlackHole extends Polygon {
 	int counter = 0;
 	
 	public BlackHole() {
-		super(instantiateShape(), new Point(SpaceEvaders.WIDTH / 2, SpaceEvaders.LENGTH / 2), 0);
+		super(instantiateShape(), new Point(SpaceEvaders.WIDTH / 2 - 50, SpaceEvaders.LENGTH / 2 - 50), 0);
 		Point[] shape = {
 			new Point(SIZE, 0), new Point(3 * SIZE, 0), new Point(4 * SIZE, SIZE),
 			new Point(4 * SIZE, 3 * SIZE), new Point(3 * SIZE, 4 * SIZE),
 			new Point(SIZE, 4 * SIZE), new Point(0, 3 * SIZE), new Point(0, SIZE),
 			new Point(SIZE, 0)};
-		hitbox = new Polygon(shape, this.findCenter(), this.rotation);
+		Point hitboxCenter = new Point(400, 300);
+		hitbox = new Polygon(shape, hitboxCenter, this.rotation);
 		
 	}
 
@@ -51,7 +52,8 @@ public class BlackHole extends Polygon {
 		brush.fillPolygon(x2, y2, x2.length);
 		
 		hitbox.rotation = this.rotation;
-		hitbox.position = this.position;
+		hitbox.position = this.position.clone();
+		hitbox.position.addToPoint(40, 40);
 		int[] x3 = new int[hitbox.getPoints().length];
 		int[] y3 = new int[hitbox.getPoints().length];
 		for(int i = 0; i < x3.length; i++) {
@@ -60,7 +62,7 @@ public class BlackHole extends Polygon {
 		}
 		
 		brush.setColor(Color.BLACK);
-		brush.drawPolygon(x3, y3, x3.length);
+		brush.fillPolygon(x3, y3, x3.length);
 		
 		counter++;
 	}
