@@ -6,6 +6,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Iterator;
 
+/**
+ * Represents a controllable spaceship in the game world. 
+ * Handles player movement, input, projectile management, and rendering. 
+ * Each Spaceship instance corresponds to one player.
+ */
 public class Spaceship extends Polygon implements KeyListener, Iterable<Projectile>{
 	
 	private static int id = 1;
@@ -28,6 +33,14 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	private Projectile[] projectiles;
 	private Polygon hitbox;
 	
+	
+	/**
+	 * Constructs a new Spaceship at the specified position and rotation.
+	 * Initializes movement parameters, assigns player ID, and sets up projectile array.
+	 *
+	 * @param position The initial position of the spaceship.
+	 * @param rotation The initial rotation angle in degrees.
+	 */
 	public Spaceship(Point position, double rotation) {
 		super(instantiateShape(), position, rotation);
 		hitbox = this;
@@ -44,14 +57,20 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		
 	}
 	
+	/**
+	 * Returns the hitbox polygon of the spaceship.
+	 *
+	 * @return The Polygon representing this spaceships hitbox.
+	 */
 	public Polygon getHitbox() {
 		return hitbox;
 	}
 	
-	/*
-	 * This method is passed in the origin point and constructs the rest of the
-	 * shape. Hans, your custom polygon construction code should probably go
-	 * here.
+	/**
+	 * Creates and returns the set of Points that define the shape of a spaceship.
+	 * Used for initializing the spaceship graphic and the hitbox.
+	 *
+	 * @return An array of Points representing the spaceship shape.
 	 */
 	private static Point[] instantiateShape() {
 		Point[] shape = {
@@ -64,10 +83,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	}
 	
 	
-	/*
-	 * This is the code that is called every frame.
-	 * After handling movement, the polygon is drawn by extracting the x coords
-	 * and the y coords from the point array.
+	/**
+	 * Updates the spaceship’s position, handles movement, and draws
+	 * the ship and its projectiles onto the screen each frame.
+	 *
+	 * @param brush The Graphics object used for drawing.
 	 */
 	public void paint(Graphics brush) {
 		
@@ -95,14 +115,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		
 	}
 	
-	/*
-	 * This method handles movement.
-	 * Every frame, the velocities are added to the current position.
-	 * Then, if the spaceship is accelerating, the accelerations are added
-	 * to their respective velocities.
-	 * 
-	 * Then, if the respective keys are being held down, the spaceship turns
-	 * accordingly.
+	/**
+	 * Handles movement updates for the spaceship.
+	 * Applies acceleration, velocity, and rotation based on current key states.
+	 * Called automatically once per frame in the paint loop.
 	 */
 	private void handleMovement() {
 		
@@ -130,6 +146,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
+	/**
+	 * Attempts to fire a Mine projectile if a projectile slot is available.
+	 * Instantiates a new mine object and stores it in the projectile array.
+	 */
 	private void fireMine() {
 		int openMine = canFireProjectile();
 		if (openMine != -1) {
@@ -138,6 +158,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
+	/**
+	 * Attempts to fire a Missile projectile if a projectile slot is available.
+	 * Instantiates a new missile object and stores it in the projectile array.
+	 */
 	private void fireMissile() {
 		int openMissile = canFireProjectile();
 		if (openMissile != -1) {
@@ -146,6 +170,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
+	/**
+	 * Determines the index of the next available projectile slot.
+	 *
+	 * @return The first available array index, or -1 if all slots are filled.
+	 */
 	private int canFireProjectile() {
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			if (projectiles[i] == null) {
@@ -155,6 +184,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		return -1;
 	}
 	
+	/**
+	 * Removes the specified projectile from the projectile array.
+	 *
+	 * @param projectile The projectile to remove.
+	 */
 	private void killProjectile(Projectile projectile) {
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			if (projectiles[i] == projectile) {
@@ -163,6 +197,13 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
+	/**
+	 * Iterates through projectiles and renders each one.
+	 * Also uses the custom iterator to remove projectiles that move out of bounds.
+	 *
+	 * @param brush The Graphics object used for drawing.
+	 */
+
 	private void drawProjectiles(Graphics brush) {
 		
 		Iterator<Projectile> it = iterator();
@@ -183,11 +224,19 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
-	//comments for this iterator must explicitly state that it mutates as it traverses...
+	/**
+	 * Returns an iterator over this spaceship's projectile array.
+	 * The iterator iterates to projectiles that leave/dont collide with the border.
+	 * Contains an anonymous class that defines the iterator
+	 *
+	 * @return A Projectiel iterator to travese over the projectile array.
+	 */	
 	@Override
-
 	public Iterator<Projectile> iterator() {
 
+		/**
+		 * Represents an iterator that traverses to out of bounds projectiles in the projectiles array
+		 */
 		return new Iterator<Projectile>() {
 			private int pos = 0;
 			private int lastReturned = -1;
@@ -229,11 +278,19 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 
 	}
 	
+	/**
+	 * Adds a gravitational acceleration influence due to the blach hole to the spaceship’s current acceleration.
+	 *
+	 * @param a The acceleration vector to add.
+	 */
 	public void blackHoleAccelerate(Point a) {
 		this.xAccel += a.x;
 		this.yAccel += a.y;
 	}
 	
+	/**
+	 * Applies black hole gravitational acceleration to all active projectiles.
+	 */
 	public void accelerateProjectiles() {
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			if (projectiles[i] != null && projectiles[i] instanceof Missile) {
@@ -305,9 +362,20 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
+	/**
+	 * Invoked when a key is typed (unused).
+	 *
+	 * @param e The KeyEvent associated with the typed key.
+	 */
 	@Override
 	public void keyTyped(KeyEvent e) {}
 	
+	/**
+	 * Handles player input when a key is pressed.
+	 * Maps keypresses to acceleration, turning, and projectile firing depending on the player ID.
+	 *
+	 * @param e The KeyEvent triggered by key press.
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (player == 1) {
@@ -360,6 +428,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		
 	}
 
+	/**
+	 * Handles player input when a key is released.
+	 * Resets acceleration, turning, and projectile-firing booleans.
+	 *
+	 * @param e The KeyEvent caused by key release.
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (player == 1) {
@@ -398,8 +472,8 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
-	/*
-	 * Class that handles the Missile game object
+	/**
+	 * Represents a missile projectile fired by a spaceship.
 	 */
 	private class Missile extends Polygon implements Projectile {
 		
