@@ -3,10 +3,13 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+/**
+ * Asteroid represents a moving, polygon object in the game that can collide
+ * with other objects such as spaceships and projectiles. 
+ */
 public class Asteroid extends Polygon implements Projectile {
 	
 	public static final int SIZE = 24;
-	// 7 by 7 object with length SIZE
 	
 	private static final int MAXASTEROIDS = 20;
 	
@@ -24,6 +27,11 @@ public class Asteroid extends Polygon implements Projectile {
 	private int initTime;
 	
 
+	/**
+     * Constructs an Asteroid with a specified shape, position, and rotation.
+     * The shape is generated randomly, and the position is set based on the
+     * provided coordinates.
+     */
 	public Asteroid() {
 		super(instantiateShape(), startPosition(), 0);
 		if (this.position.y == 50) {
@@ -52,6 +60,10 @@ public class Asteroid extends Polygon implements Projectile {
 		//hitbox = new Polygon(instantiateShape(), this.position, this.rotation);
 	}
 	
+	/**
+	 * Generates a polygon shape representing the asteroid.
+	 * @return an array of Points representing the asteroid's shape
+	 */
 	private static Point[] instantiateShape(){
 		Point[] shape = {
 			new Point(SIZE / 7, 0), new Point(SIZE * 3/7, 0),
@@ -62,6 +74,12 @@ public class Asteroid extends Polygon implements Projectile {
 		return shape;
 	}
 	
+	/**
+	 * Randomly Determines a starting position for the asteroid along one of the four borders
+	 * of the game area.
+	 *
+	 * @return a Point representing the asteroid's spawn location
+	 */
 	private static Point startPosition() {
 		Point start;
 		int whichBorder = (int) (Math.random() * 4) + 1;
@@ -107,6 +125,10 @@ public class Asteroid extends Polygon implements Projectile {
 		return start;
 	}
 	
+	/**
+     * Summons a new asteroid if there is space in the asteroid array.
+     */
+
 	public static void summonAsteroid() {
 		int openAsteroid = findOpenAsteroid();
 		if (openAsteroid != -1) {
@@ -116,6 +138,11 @@ public class Asteroid extends Polygon implements Projectile {
 		}
 	}
 	
+	/**
+	 * Finds an available slot in the asteroids array for a new asteroid.
+	 *
+	 * @return the index of an open slot, or -1 if none are available
+	 */
 	private static int findOpenAsteroid() {
 		for (int i = 0; i < MAXASTEROIDS; i++) {
 			if (asteroids[i] == null) {
@@ -125,6 +152,12 @@ public class Asteroid extends Polygon implements Projectile {
 		return -1;
 	}
 	
+	/**
+     * Paints the asteroid in the game, updating its position
+     * and rotation before drawing.
+     *
+     * @param brush the Graphics object used to draw the asteroid
+     */
 	public void paint(Graphics brush) {
 		
 		this.handleMovement();
@@ -144,6 +177,12 @@ public class Asteroid extends Polygon implements Projectile {
 		brush.fillPolygon(x, y, points.length);
 	}
 	
+	/**
+	 * Removes the given asteroid from the game by clearing it from the asteroids array
+	 * and removing it from the BlackHole objects list.
+	 *
+	 * @param asteroid the Asteroid to remove
+	 */
 	private static void killAsteroid(Asteroid asteroid) {
 		for (int i = 0; i < MAXASTEROIDS; i++) {
 			if (asteroids[i] == asteroid) {
@@ -153,11 +192,20 @@ public class Asteroid extends Polygon implements Projectile {
 		BlackHole.objects.remove(asteroid);
 	}
 	
+	/**
+     * Applies gravitational acceleration from a black hole to this asteroid.
+     *
+     * @param a a Point representing the x and y acceleration to be applied
+     */
 	public void blackHoleAccelerate(Point a) {
 		this.xAccel += a.x;
 		this.yAccel += a.y;
 	}
 	
+	/**
+	 * Handles movement and velocity updates for this asteroid, including
+	 * interactions with the black hole and collisions with spaceships.
+	 */
 	private void handleMovement() {
 		
 		if (SpaceEvaders.getCounter() - initTime >= LIFETIME) {
@@ -184,15 +232,31 @@ public class Asteroid extends Polygon implements Projectile {
 		yVel += yAccel;
 	}
 
+	/**
+     * Returns the current velocity of this asteroid as a Point object.
+     *
+     * @return the current velocity of the asteroid
+     */
 	@Override
 	public Point getVelocity() {
 		return new Point(xVel, yVel);
 	}
 	
+	/**
+     * Returns the polygon hitbox representing this asteroid for collision detection.
+     *
+     * @return the hitbox of the asteroid
+     */
 	public Polygon getHitbox() {
 		return hitbox;
 	}
 
+	/**
+     * Checks whether this asteroid collides with a given polygon.
+     *
+     * @param polygon the polygon to check collision against
+     * @return true if the asteroid collides with the polygon;false otherwise
+     */
 	@Override
 	public boolean checkCollision(Polygon polygon) {
 		Point[] polygonPoints = polygon.getPoints();

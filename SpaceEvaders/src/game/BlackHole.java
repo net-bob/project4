@@ -4,15 +4,30 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+/**
+ * BlackHole represents a black hole in the game that pulls in
+ * spaceships and asteroids.
+ */
 public class BlackHole extends Polygon {
+	/**
+	 * scales the black hole
+	 */
 	public static final int SIZE = 10;
-	// 12 by 12 object, with unit size SIZE
-	
+	/**
+	 * Determines the strength/pull of the black hole.
+	 */
 	public static final int GRAVITATION = 300;
+	/**
+	 * Holds all of the game elements that are affected by the black hole.
+	 */
 	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
-	int counter = 0;
+	private int counter = 0;
 	
+	/**
+     * Constructs a BlackHole positioned at the center of the game field.
+     * Initializes its shape and hitbox for collision detection.
+     */
 	public BlackHole() {
 		super(instantiateShape(), new Point(SpaceEvaders.WIDTH / 2 - 50, SpaceEvaders.LENGTH / 2 - 50), 0);
 		Point[] shape = {
@@ -25,6 +40,12 @@ public class BlackHole extends Polygon {
 		
 	}
 
+	/**
+	 * Creates and returns the set of Points that define the shape of the BlackHole.
+	 * Used for initializing the BlackHole graphic and the hitbox.
+	 *
+	 * @return An array of Points representing the BlackHole shape.
+	 */
 	private static Point[] instantiateShape() {
 		Point[] shape = {
 			new Point(2 * SIZE, 2 * SIZE), new Point(5 * SIZE, 3 * SIZE),
@@ -39,6 +60,12 @@ public class BlackHole extends Polygon {
 		return shape;
 	}
 	
+	/**
+     * Paints the black hole and its hitbox in the game.
+     * Also handles the rotation animation and applies gravity to nearby objects.
+     *
+     * @param brush the Graphics object used for drawing the black hole
+     */
 	public void paint(Graphics brush) {
 		
 		handleGravity();
@@ -80,10 +107,21 @@ public class BlackHole extends Polygon {
 		counter++;
 	}
 	
+	/**
+     * Returns the hitbox of the black hole used for collision detection.
+     *
+     * @return the Polygon representing the hitbox of the black hole
+     */
 	public Polygon getHitbox() {
 		return hitbox;
 	}
 	
+	/**
+     * Checks whether the black hole collides with the given polygon.
+     *
+     * @param polygon the polygon to check collision against
+     * @return true if any point of the polygon or black hole hitbox overlaps; false otherwise
+     */
 	public boolean checkCollision(Polygon polygon) {
 		
 		Point[] polygonPoints = polygon.getPoints();
@@ -103,6 +141,10 @@ public class BlackHole extends Polygon {
 		return false;
 	}
 	
+	/**
+     * Applies gravitational acceleration to all objects in the BlackHole.objects list.
+     * Spaceships and their projectiles, as well as asteroids, are affected by the gravity.
+     */
 	private void handleGravity() {
 		for (Polygon object : objects) {
 			if (object instanceof Spaceship) {
@@ -133,7 +175,6 @@ public class BlackHole extends Polygon {
 				((Spaceship)object).accelerateProjectiles();
 				
 				
-				// Implement the same thing for all spaceship projectiles
 			}
 			else if (object instanceof Asteroid) {
 				double distance = Point.distanceBetween(

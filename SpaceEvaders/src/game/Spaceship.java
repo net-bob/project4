@@ -15,6 +15,9 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	
 	private static int id = 1;
 	
+	/**
+	 * scales the spaceship
+	 */
 	public static final int SIZE = 40;
 	private static final double ACCELRATE = 0.05;
 	private static final int ROTATERATE = 5;
@@ -363,7 +366,7 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	}
 	
 	/**
-	 * Invoked when a key is typed (unused).
+	 * Called when a key is typed (unused).
 	 *
 	 * @param e The KeyEvent associated with the typed key.
 	 */
@@ -487,13 +490,15 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		private double yVel;
 		private int initTime;
 		
-		/*
-		 * These acceleration variables should not be relevant until the black
-		 * hole exists, since they fly straight.
-		 */
 		private double xAccel;
 		private double yAccel;
 		
+		/**
+		 * Constructs a missile launched from a given spaceship.
+		 * Initializes velocity based on the ship’s current speed and rotation.
+		 *
+		 * @param spaceship The spaceship firing this missile.
+		 */
 		public Missile(Spaceship spaceship) {
 			super(instantiateShape(), starterLocation(spaceship), spaceship.rotation);
 			
@@ -508,21 +513,16 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 				spaceship.yVel * Math.sin(Math.toRadians(spaceship.rotation))
 			;
 			
-			/*
-			 * Listen, I know the math for this is awful.
-			 * Do I care?
-			 * Maybe.
-			 * I think this is "good enough".
-			 */
 			xVel += totalShipInfluence * Math.cos(Math.toRadians(spaceship.rotation));
 			yVel += totalShipInfluence * Math.sin(Math.toRadians(spaceship.rotation));
 			
 			this.initTime = SpaceEvaders.getCounter();
 		}
 		
-		/*
-		 * This is the Missile's code to construct its own shape. Hans, your
-		 * missile polygon construction code should go here.
+		/**
+		 * Constructs the polygon shape representing the missile.
+		 * 
+		 * @return An array of Point objects that define the missile’s outline.
 		 */
 		private static Point[] instantiateShape() {
 			Point[] shape = {
@@ -536,26 +536,30 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 		
 		
-		/*
-		 * This method determines where the missile spawns relative to the
-		 * spaceship. 
+		/**
+		 * Determines the missile's initial position based on the spaceship’s current
+		 * position and rotation.
+		 * Centers the missile on the spaceship before launch.
+		 *
+		 * @param spaceship The spaceship firing this missile.
+		 * @return A Point representing the missile’s starting location.
 		 */
 		private static Point starterLocation(Spaceship spaceship) {
 			Point start = spaceship.position.clone();
 			
-			// Centers the missile on the center of the spaceship
 			start.addToPoint(
 				(SIZE - LENGTH) / 2,
 				(SIZE - WIDTH) / 2
 			);
 			
-			
 			return start;
 		}
 		
-		/*
-		 * This is the code that is called every frame. This should be called
-		 * for every missile.
+		/**
+		 * Updates missile movement and renders it each frame.
+		 * Handles collision detection and deactivation if needed.
+		 *
+		 * @param brush The Graphics object used for rendering.
 		 */
 		public void paint(Graphics brush) {
 			this.handleMovement();
@@ -574,19 +578,21 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			brush.fillPolygon(x, y, points.length);
 		}
 		
+		/**
+		 * Applies gravitational acceleration from the black hole to the missile.
+		 *
+		 * @param a The acceleration vector to add to the missile’s velocity.
+		 */
+
 		public void blackHoleAccelerate(Point a) {
 			this.xAccel += a.x;
 			this.yAccel += a.y;
 		}
 		
-		/*
-		 * This code is effectively the same as the outer class' code, but with
-		 * a few minor changes. Firstly, the rotation of the missile is
-		 * determined not by player control but by the velocity of the missile.
-		 * This is to make the missile path more intuitive to understand:
-		 * if it's pointing that way, it's going that way.
-		 * 
-		 * It's also always "accelerating" but only if the black hole is in play.
+		/**
+		 * Handles missile movement and collision logic each frame.
+		 * Updates rotation based on direction of travel.
+		 * Checks collisions with spaceships and the black hole, deactivating upon impact.
 		 */
 		private void handleMovement() {
 			
@@ -615,11 +621,23 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			this.yVel += this.yAccel;	
 		}
 
+		/**
+		 * Returns the missile’s current velocity vector.
+		 *
+		 * @return A Point representing velocity in x and y directions.
+		 */
 		@Override
 		public Point getVelocity() {
 			return new Point(xVel, yVel);
 		}
 
+		/**
+		 * Determines whether the missile collides with a given polygon.
+		 * Checks for overlap between missile points and the polygon’s points.
+		 *
+		 * @param polygon The polygon to test for intersection.
+		 * @return True if there is a collision;false otherwise.
+		 */
 		@Override
 		public boolean checkCollision(Polygon polygon) {
 			
@@ -641,7 +659,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 	}
 	
-	
+	/**
+	 * Represents a mine projectile that is fired by a spaceship.
+	 * A mine's existence has a limited lifetime, and
+	 * detonates (or despawns) after its windup period or upon collision.
+	 */
 	private class Mine extends Polygon implements Projectile {
 		private static final int SIZE = 20;
 		private static final int WINDUPTIME = 180;
@@ -655,6 +677,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		private int initTime;
 		
 		
+		/**
+		 * Constructs a new mine launched from a spaceship.
+		 * Initializes velocity based on the ship’s movement and rotation.
+		 *
+		 * @param spaceship The spaceship deploying the mine.
+		 */
 		public Mine(Spaceship spaceship) {
 			super(instantiateShape(), starterLocation(spaceship), spaceship.rotation);
 			this.xVel = MINEINITSPEED * Math.cos(Math.toRadians(spaceship.rotation))
@@ -665,6 +693,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			this.initTime = SpaceEvaders.getCounter();
 		}
 		
+		/**
+		 * Updates mine movement and renders it each frame.
+		 * Handles collision checks and despawns after its active duration ends.
+		 *
+		 * @param brush The Graphics object used for rendering.
+		 */
 		public void paint(Graphics brush) {
 			this.handleMovement();
 			
@@ -681,11 +715,20 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			brush.fillPolygon(x, y, points.length);
 		}
 		
+		/**
+		 * Applies gravitational acceleration from the black hole to the mine.
+		 *
+		 * @param a The acceleration vector to add to the mine’s velocity.
+		 */
 		public void blackHoleAccelerate(Point a) {
 			this.xAccel += a.x;
 			this.yAccel += a.y;
 		}
 		
+		/**
+		 * Handles movement, timing, and collision logic for the mine.
+		 * The mine despawns after a set windup time or upon collision.
+		 */
 		private void handleMovement() {
 			
 			if (SpaceEvaders.getCounter() - initTime >= WINDUPTIME) {
@@ -715,8 +758,10 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			this.yVel += this.yAccel;
 		}
 
-		/*
-		 * This is the Mine's code to construct its own shape.
+		/**
+		 * Constructs the polygon shape representing the mine.
+		 *
+		 * @return An array of Point objects defining the mine’s outline.
 		 */
 		private static Point[] instantiateShape() {
 			Point[] shape = {
@@ -729,9 +774,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		}
 		
 		
-		/*
-		 * This method determines where the mine spawns relative to the
-		 * spaceship. 
+		/**
+		 * Determines the mine’s initial spawn position relative to the spaceship.
+		 * Centers the mine on the spaceship when deployed.
+		 *
+		 * @param spaceship The spaceship deploying this mine.
+		 * @return A Point representing the mine’s starting location.
 		 */
 		private static Point starterLocation(Spaceship spaceship) {
 			Point start = spaceship.position.clone();
@@ -745,10 +793,23 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			return start;
 		}
 
+		/**
+		 * Returns the mines velocity vector.
+		 *
+		 * @return A Point representing velocity in x and y directions.
+		 */
 		@Override
 		public Point getVelocity() {
 			return new Point(xVel, yVel);
 		}
+
+		/**
+		 * Checks if the mine collides with another polygon.
+		 * Used for detecting impacts with ships or the black hole.
+		 *
+		 * @param polygon The polygon to test for collision.
+		 * @return True if there is a collision; false otherwise.
+		 */
 
 		@Override
 		public boolean checkCollision(Polygon polygon) {

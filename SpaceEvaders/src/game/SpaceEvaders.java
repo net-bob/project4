@@ -1,18 +1,26 @@
 package game;
 
-/*
-CLASS: YourGameNameoids
-DESCRIPTION: Extending Game, YourGameName is all in the paint method.
-NOTE: This class is the metaphorical "main method" of your program,
-      it is your control center.
-
-*/
+/**
+ * SpaceEvaders is the main game class. 
+ * It handles starting and setting up the game, constantly refreshing the frame, rendering, 
+ * and making and having a lot of the game objects,
+ * including spaceships, asteroids, and the black hole. 
+ */
 import java.awt.*;
 
 @SuppressWarnings("serial")
 class SpaceEvaders extends Game {
+	/*
+	 * A counter that increments every time the frame refreshes.
+	 */
 	public static int counter = 0;
+	/*
+	 * Width of game screen
+	 */
 	public static final int WIDTH = 1200;
+	/*
+	 * Length of game screen
+	 */
 	public static final int LENGTH = 900;
 	
 	private static final int TIMESPAWNASTEROID = 1500;
@@ -20,13 +28,28 @@ class SpaceEvaders extends Game {
 	
 	private BorderGenerator borderGen;
 	private static Polygon borderHitbox;
+	/*
+	 * Determines weather the game is over or not.
+	 */
 	public static boolean gameOver = false;
+	/*
+	 * Represents the first of two space ships in the game.
+	 */
 	public static Spaceship thing1 = new Spaceship(new Point(WIDTH / 4, LENGTH / 2), 0);
+	/*
+	 * Represents the second of two space ships in the game.
+	 */
 	public static Spaceship thing2 = new Spaceship(new Point(WIDTH * 3/4, LENGTH / 2), 0);
+	/*
+	 * Represents the black hole in the game.
+	 */
 	public static BlackHole blackhole = null;
 	
 	
-
+	/**
+     * Constructs the SpaceEvaders game window, sets up the border, 
+     * initializes spaceships, and adds key listeners for player input.
+     */
 	public SpaceEvaders() {
 		super("Space Evaders", WIDTH, LENGTH);
 		this.setFocusable(true);
@@ -51,10 +74,24 @@ class SpaceEvaders extends Game {
 		BlackHole.objects.add(thing2);
 	}
 	
+	/**
+     * Returns the polygon representing the game border hitbox.
+     *
+     * @return the Polygon representing the border hitbox
+     */
+
 	public static Polygon getBorderHitbox() {
 		return borderHitbox;
 	}
 	
+	/**
+     * Paints the game objects to the canvas each frame. 
+     * Updates and renders spaceships, asteroids, the black hole, 
+     * the border, and the counter/time display.
+     * A Black hole and asteroids spawn after a designated time, and asteroids spawn every 100 frames.
+     *
+     * @param brush the Graphics object used for rendering
+     */
 	public void paint(Graphics brush) {
 		if (!gameOver) {
 			brush.setColor(Color.black);
@@ -89,10 +126,20 @@ class SpaceEvaders extends Game {
 		}
 	}
 	
+	/**
+     * Returns the counter for the game.
+     *
+     * @return the current counter value
+     */
 	public static int getCounter() {
 		return counter;
 	}
 	
+	/**
+     * Starts the SpaceEvaders game.
+     *
+     * @param args an array of Strings
+     */
 	public static void main (String[] args) {
 		SpaceEvaders a = new SpaceEvaders();
 		a.repaint();
