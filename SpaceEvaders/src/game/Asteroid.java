@@ -76,9 +76,6 @@ public class Asteroid extends Polygon implements Projectile {
 					SpaceEvaders.WIDTH,
 					(Math.random() * SpaceEvaders.LENGTH + 1)
 			);
-			
-			
-			
 		}
 		else if (whichBorder == 3) {
 			start = new Point(
@@ -174,10 +171,10 @@ public class Asteroid extends Polygon implements Projectile {
 	@Override
 	public boolean checkCollision(Polygon polygon) {
 		Point[] polygonPoints = polygon.getPoints();
-		Point[] asteroidPoints = this.getPoints();
+		Point[] asteroidPoints = hitbox.getPoints();
 		
 		for (Point point : polygonPoints) {
-			if (this.contains(point)) {
+			if (hitbox.contains(point)) {
 				return true;
 			}
 		}
