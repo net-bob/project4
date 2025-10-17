@@ -69,13 +69,6 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		
 		this.drawProjectiles(brush);
 		
-		for (int i = 0; i < projectiles.length; i++) {
-			if (projectiles[i] != null) {
-				System.out.println(projectiles[i]);
-			}
-		}
-		
-		
 		Point[] points = this.getPoints();
 		
 		int[] x = new int[points.length];
