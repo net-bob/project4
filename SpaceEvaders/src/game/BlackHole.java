@@ -38,8 +38,6 @@ public class BlackHole extends Polygon {
 	
 	public void paint(Graphics brush) {
 		
-		System.out.println(objects);
-		
 		this.rotate(SpaceEvaders.getCounter());
 		
 		int[] x2 = new int[this.getPoints().length];
@@ -69,5 +67,12 @@ public class BlackHole extends Polygon {
 	
 	public Polygon getHitbox() {
 		return hitbox;
+	}
+	
+	
+	private void handleGravity() {
+		
+		for ()
+		
 	}
 }
