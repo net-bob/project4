@@ -8,7 +8,7 @@ public class BlackHole extends Polygon {
 	public static final int SIZE = 10;
 	// 12 by 12 object, with unit size SIZE
 	
-	public static final int GRAVITATION = 400;
+	public static final int GRAVITATION = 300;
 	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
 	int counter = 0;
@@ -20,7 +20,7 @@ public class BlackHole extends Polygon {
 			new Point(4 * SIZE, 3 * SIZE), new Point(3 * SIZE, 4 * SIZE),
 			new Point(SIZE, 4 * SIZE), new Point(0, 3 * SIZE), new Point(0, SIZE),
 			new Point(SIZE, 0)};
-		Point hitboxCenter = new Point(400, 300);
+		Point hitboxCenter = new Point(SpaceEvaders.WIDTH / 2, SpaceEvaders.LENGTH / 2);
 		hitbox = new Polygon(shape, hitboxCenter, this.rotation);
 		
 	}
@@ -159,7 +159,7 @@ public class BlackHole extends Polygon {
 					-totalInfluence * Math.cos(theta),
 					-totalInfluence * Math.sin(theta)
 				);
-				((Asteroid)object).accelerate(accelerate);
+				((Asteroid)object).blackHoleAccelerate(accelerate);
 			}
 		}
 		

@@ -11,8 +11,8 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	private static int id = 1;
 	
 	public static final int SIZE = 40;
-	private static final double ACCELRATE = 0.1;
-	private static final int ROTATERATE = 3;
+	private static final double ACCELRATE = 0.05;
+	private static final int ROTATERATE = 5;
 	private static final int MAXPROJECTILES = 10;
 	
 	private int player;
@@ -397,7 +397,6 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	 * Class that handles the Missile game object
 	 */
 	private class Missile extends Polygon implements Projectile {
-		
 		
 		private static final double LENGTH = 25;
 		private static final double WIDTH = 20;

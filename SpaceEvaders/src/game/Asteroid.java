@@ -153,7 +153,7 @@ public class Asteroid extends Polygon implements Projectile {
 		BlackHole.objects.remove(asteroid);
 	}
 	
-	public void accelerate(Point a) {
+	public void blackHoleAccelerate(Point a) {
 		this.xAccel += a.x;
 		this.yAccel += a.y;
 	}
