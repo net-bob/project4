@@ -38,9 +38,10 @@ class SpaceEvaders extends Game {
 			brush.setColor(Color.BLUE);
 			brush.drawPolygon(XCoords, YCoords, 4);
 		};
-		Point[] shape = {new Point(50,50), new Point(750,50), new Point(750, 550), 
-		new Point(50,550)};
-		borderHitbox = new Polygon(shape, new Point(400,300), 0);
+		Point[] shape = {
+				new Point(50, 50), new Point(WIDTH - 50,50),
+				new Point(WIDTH - 50, LENGTH -  50), new Point(50, LENGTH - 50)};
+		borderHitbox = new Polygon(shape, new Point(0,0), 0);
 		
 		this.addKeyListener(thing1);
 		this.addKeyListener(thing2);
@@ -85,6 +86,9 @@ class SpaceEvaders extends Game {
 				}
 			}
 			
+//			for (int i = 0; i < borderHitbox.getPoints().length; i++) {
+//				System.out.println(borderHitbox.getPoints()[i]);
+//			}
 			
 			/*
 			 * the comment below is just me messing with the code before we meet

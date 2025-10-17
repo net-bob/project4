@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Asteroid extends Polygon implements Projectile {
@@ -24,19 +25,19 @@ public class Asteroid extends Polygon implements Projectile {
 
 	public Asteroid() {
 		super(instantiateShape(), startPosition(), 0);
-		if (this.position.y == 0) {
+		if (this.position.y == 50) {
 			// Top wall
 			this.rotation = (int)(Math.random() * 181);
 		}
-		else if (this.position.y == SpaceEvaders.LENGTH) {
+		else if (this.position.y == SpaceEvaders.LENGTH - 50) {
 			// Bottom wall
 			this.rotation = (int)(Math.random() * 181) + 180;
 		}
-		else if (this.position.x == 0) {
+		else if (this.position.x == 50) {
 			// Left wall
 			this.rotation = (int)(Math.random() * 181) - 90;
 		}
-		else if (this.position.x == SpaceEvaders.WIDTH) {
+		else if (this.position.x == SpaceEvaders.WIDTH - 50) {
 			// Right wall
 			this.rotation = ((int)Math.random() * 181) + 90;
 		}
@@ -73,24 +74,24 @@ public class Asteroid extends Polygon implements Projectile {
 		if (whichBorder == 1) {
 			start = new Point(
 					(Math.random() * SpaceEvaders.WIDTH + 1),
-					0
+					50
 			);
 		}
 		else if (whichBorder == 2) {
 			start = new Point(
-					SpaceEvaders.WIDTH,
+					SpaceEvaders.WIDTH - 50,
 					(Math.random() * SpaceEvaders.LENGTH + 1)
 			);
 		}
 		else if (whichBorder == 3) {
 			start = new Point(
 					(Math.random() * SpaceEvaders.WIDTH + 1),
-					SpaceEvaders.LENGTH
+					SpaceEvaders.LENGTH - 50
 			);
 		}
 		else if (whichBorder == 4) {
 			start = new Point(
-					0,
+					50,
 					(Math.random() * SpaceEvaders.LENGTH + 1)
 			);
 		}
@@ -137,6 +138,7 @@ public class Asteroid extends Polygon implements Projectile {
 			y[i] = (int) Math.round(points[i].y);
 		}
 		
+		brush.setColor(Color.WHITE);
 		brush.fillPolygon(x, y, points.length);
 	}
 	

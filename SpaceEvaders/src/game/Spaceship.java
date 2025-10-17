@@ -69,6 +69,13 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		
 		this.drawProjectiles(brush);
 		
+		for (int i = 0; i < projectiles.length; i++) {
+			if (projectiles[i] != null) {
+				System.out.println(projectiles[i]);
+			}
+		}
+		
+		
 		Point[] points = this.getPoints();
 		
 		int[] x = new int[points.length];
@@ -158,6 +165,13 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	}
 	
 	private void drawProjectiles(Graphics brush) {
+		
+		Iterator<Projectile> it = iterator();
+		while(it.hasNext()){
+		    it.next();
+		    it.remove();
+		}
+		
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			if (projectiles[i] != null) {
 				if (projectiles[i] instanceof Spaceship.Missile) {
@@ -172,43 +186,53 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	
 	//comments for this iterator must explicitly state that it mutates as it traverses...
 	@Override
+
 	public Iterator<Projectile> iterator() {
-		Iterator<Projectile> it = new Iterator<Projectile>() { 
-			int pos = 0; //so basically u call the next method manually and never use a for in enhaced for loop and it iterates to the next null after rmemoving any out of bounds missiles and then u just use the pos instance var to set that null value to a new missile; essentially the next method only serves to iterate the pos instance to the next null elemnt rather than returning the next null elemnt...
+
+		return new Iterator<Projectile>() {
+			private int pos = 0;
+			private int lastReturned = -1;
+		
 			public boolean hasNext() {
-				eraseOutOfBoundsProjectiles();
-				if(pos < MAXPROJECTILES && hasNullsAfter(pos)) {
-					return true;
-				}
-				return false;
+				while (pos < projectiles.length) {
+	                Projectile p = projectiles[pos];
+	                if (p != null && isOutOfBounds(p)) {
+	                    return true;
+	                }
+	                pos++;
+	            }
+	            return false;
 			}
+		
 			public Projectile next() {
-				eraseOutOfBoundsProjectiles();
-				pos++;
-				while(projectiles[pos] != null) {
-					pos++;
-				}
-				return projectiles[pos];
+				lastReturned = pos;
+				return projectiles[pos++];
 			}
-			
-			private boolean hasNullsAfter(int pos) {
-				for(int i = pos; i < projectiles.length; i++) {
-					if(projectiles[i] == null) {
-						return true;
+		
+			public void remove() {
+				projectiles[lastReturned] = null;
+				lastReturned = -1;
+			}
+		
+			private boolean isOutOfBounds(Projectile p) {
+				Polygon borderHitbox = SpaceEvaders.getBorderHitbox();
+				Point[] projectilePoints = ((Polygon)p).getPoints();
+				
+				
+				for (int i = 0; i < projectilePoints.length; i++) {
+					if (borderHitbox.contains(projectilePoints[i])) {
+						return false;
 					}
 				}
-				return false;
-			}
-			
-			public void eraseOutOfBoundsProjectiles() {
-				for(int i = 0; i < projectiles.length; i++) {
-					if(!projectiles[i].checkCollision(SpaceEvaders.getBorderHitbox())) { //how can I access this method from the space evaders class?
-						projectiles[i] = null;
-					}
-				}
+				return true;
 			}
 		};
-		return it;
+
+	}
+	
+	public void accelerate(double x, double y) {
+		this.xAccel += x;
+		this.yAccel += y;
 	}
 	
 	@Override
@@ -440,9 +464,12 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			this.position.addToPoint(this.xVel, this.yVel);
 			
 			this.xVel += this.xAccel;
-			this.yVel += this.yAccel;
-			
-			
+			this.yVel += this.yAccel;	
+		}
+		
+		public void accelerate(double x, double y) {
+			this.xAccel += x;
+			this.yAccel += y;
 		}
 
 		@Override
@@ -509,6 +536,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			
 			brush.setColor(Color.RED);
 			brush.fillPolygon(x, y, points.length);
+		}
+		
+		public void accelerate(double x, double y) {
+			this.xAccel += x;
+			this.yAccel += y;
 		}
 		
 		private void handleMovement() {

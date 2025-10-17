@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class BlackHole extends Polygon {
-	private static final int SIZE = 1;
+	private static final int SIZE = 10;
 	
 	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
@@ -72,7 +72,13 @@ public class BlackHole extends Polygon {
 	
 	private void handleGravity() {
 		
-		for ()
+		for (Polygon object : objects) {
+			if (object instanceof Spaceship) {
+				
+			}
+		}
 		
 	}
+	
+	
 }
