@@ -234,6 +234,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		this.yAccel += y;
 	}
 	
+	public void accelerate(Point a) {
+		this.xAccel += a.x;
+		this.yAccel += a.y;
+	}
+	
 	@Override
 	public void keyTyped(KeyEvent e) {}
 	

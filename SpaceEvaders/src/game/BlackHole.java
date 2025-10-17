@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class BlackHole extends Polygon {
 	private static final int SIZE = 10;
 	
+	private static final int GRAVITATION = 1;
 	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
 	int counter = 0;
@@ -38,6 +39,8 @@ public class BlackHole extends Polygon {
 	}
 	
 	public void paint(Graphics brush) {
+		
+		handleGravity();
 		
 		this.rotate(SpaceEvaders.getCounter());
 		
@@ -73,11 +76,23 @@ public class BlackHole extends Polygon {
 	
 	
 	private void handleGravity() {
-		
 		for (Polygon object : objects) {
+			double distance = Point.distanceBetween(
+				object.findCenter(), this.findCenter()
+			);
+			
 			if (object instanceof Spaceship) {
 				
+				Point accelerate = new Point(
+					GRAVITATION / (Math.pow(distance, 2)), 
+					GRAVITATION / (Math.pow(distance, 2))
+				);
+				
+				
+				
+				((Spaceship) object).accelerate(accelerate);
 			}
+			
 		}
 		
 	}
