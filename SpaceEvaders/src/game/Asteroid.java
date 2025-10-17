@@ -5,7 +5,8 @@ import java.awt.Graphics;
 
 public class Asteroid extends Polygon implements Projectile {
 	
-	private static final int SIZE = 24;
+	public static final int SIZE = 24;
+	// 7 by 7 object with length SIZE
 	
 	private static final int MAXASTEROIDS = 20;
 	
@@ -150,6 +151,11 @@ public class Asteroid extends Polygon implements Projectile {
 			}
 		}
 		BlackHole.objects.remove(asteroid);
+	}
+	
+	public void accelerate(Point a) {
+		this.xAccel += a.x;
+		this.yAccel += a.y;
 	}
 	
 	private void handleMovement() {

@@ -10,7 +10,7 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 	
 	private static int id = 1;
 	
-	private static final int SIZE = 40;
+	public static final int SIZE = 40;
 	private static final double ACCELRATE = 0.1;
 	private static final int ROTATERATE = 3;
 	private static final int MAXPROJECTILES = 10;
@@ -130,7 +130,6 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		if (openMine != -1) {
 			Mine newMine = new Spaceship.Mine(this);
 			projectiles[openMine] = newMine;
-			BlackHole.objects.add(newMine);
 		}
 	}
 	
@@ -139,7 +138,6 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 		if (openMissile != -1) {
 			Missile newMissile = new Spaceship.Missile(this);
 			projectiles[openMissile] = newMissile;
-			BlackHole.objects.add(newMissile);
 		}
 	}
 	
@@ -157,9 +155,6 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			if (projectiles[i] == projectile) {
 				projectiles[i] = null;
 			}
-		}
-		if (projectile instanceof Polygon) {
-			BlackHole.objects.remove((Polygon)projectile);
 		}
 	}
 	
@@ -229,14 +224,80 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 
 	}
 	
-	public void accelerate(double x, double y) {
-		this.xAccel += x;
-		this.yAccel += y;
-	}
-	
-	public void accelerate(Point a) {
+	public void blackHoleAccelerate(Point a) {
 		this.xAccel += a.x;
 		this.yAccel += a.y;
+	}
+	
+	public void accelerateProjectiles() {
+		for (int i = 0; i < MAXPROJECTILES; i++) {
+			if (projectiles[i] != null && projectiles[i] instanceof Missile) {
+				double distance = Point.distanceBetween(
+						new Point(
+							((Missile)projectiles[i]).position.x + 
+							Spaceship.Missile.LENGTH / 2,
+							((Missile)projectiles[i]).position.y + 
+							Spaceship.Missile.WIDTH / 2
+						)
+						, 
+						new Point(
+							SpaceEvaders.blackhole.position.x + 
+							6 * BlackHole.SIZE,
+							SpaceEvaders.blackhole.position.y + 
+							6 * BlackHole.SIZE
+						)
+					);
+				
+				double totalInfluence = BlackHole.GRAVITATION / Math.pow(distance, 2);
+				
+				double yDistance = ((Missile)projectiles[i]).position.y - 
+						SpaceEvaders.blackhole.position.y;
+				double xDistance = ((Missile)projectiles[i]).position.x - 
+						SpaceEvaders.blackhole.position.x;
+				
+				double theta = Math.atan2(yDistance, xDistance);
+				
+				Point accelerate = new Point(
+					-totalInfluence * Math.cos(theta),
+					-totalInfluence * Math.sin(theta)
+				);
+				
+				((Missile)projectiles[i]).blackHoleAccelerate(accelerate);
+			}
+			else if (projectiles[i] != null && projectiles[i] instanceof Mine) {
+				double distance = Point.distanceBetween(
+						new Point(
+							((Mine)projectiles[i]).position.x + 
+							Mine.SIZE / 2,
+							((Mine)projectiles[i]).position.y + 
+							Mine.SIZE / 2
+						)
+						, 
+						new Point(
+							SpaceEvaders.blackhole.position.x + 
+							6 * BlackHole.SIZE,
+							SpaceEvaders.blackhole.position.y + 
+							6 * BlackHole.SIZE
+						)
+					);
+				
+				double totalInfluence = BlackHole.GRAVITATION / Math.pow(distance, 2);
+				
+				double yDistance = ((Mine)projectiles[i]).position.y - 
+						SpaceEvaders.blackhole.position.y;
+				double xDistance = ((Mine)projectiles[i]).position.x - 
+						SpaceEvaders.blackhole.position.x;
+				
+				double theta = Math.atan2(yDistance, xDistance);
+				
+				Point accelerate = new Point(
+					-totalInfluence * Math.cos(theta),
+					-totalInfluence * Math.sin(theta)
+				);
+				
+				((Mine)projectiles[i]).blackHoleAccelerate(accelerate);
+			}
+		}
 	}
 	
 	@Override
@@ -435,6 +496,11 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			brush.fillPolygon(x, y, points.length);
 		}
 		
+		public void blackHoleAccelerate(Point a) {
+			this.xAccel += a.x;
+			this.yAccel += a.y;
+		}
+		
 		/*
 		 * This code is effectively the same as the outer class' code, but with
 		 * a few minor changes. Firstly, the rotation of the missile is
@@ -469,11 +535,6 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			
 			this.xVel += this.xAccel;
 			this.yVel += this.yAccel;	
-		}
-		
-		public void accelerate(double x, double y) {
-			this.xAccel += x;
-			this.yAccel += y;
 		}
 
 		@Override
@@ -542,9 +603,9 @@ public class Spaceship extends Polygon implements KeyListener, Iterable<Projecti
 			brush.fillPolygon(x, y, points.length);
 		}
 		
-		public void accelerate(double x, double y) {
-			this.xAccel += x;
-			this.yAccel += y;
+		public void blackHoleAccelerate(Point a) {
+			this.xAccel += a.x;
+			this.yAccel += a.y;
 		}
 		
 		private void handleMovement() {

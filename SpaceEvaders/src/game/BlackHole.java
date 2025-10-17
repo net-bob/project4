@@ -5,9 +5,10 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class BlackHole extends Polygon {
-	private static final int SIZE = 10;
+	public static final int SIZE = 10;
+	// 12 by 12 object, with unit size SIZE
 	
-	private static final int GRAVITATION = 1;
+	public static final int GRAVITATION = 400;
 	public static ArrayList<Polygon> objects = new ArrayList<Polygon>();
 	private Polygon hitbox;
 	int counter = 0;
@@ -42,6 +43,15 @@ public class BlackHole extends Polygon {
 		
 		handleGravity();
 		
+		if (checkCollision(SpaceEvaders.thing1)) {
+			System.out.println("Player 2 wins");
+			SpaceEvaders.gameOver = true;
+		}
+		else if (checkCollision(SpaceEvaders.thing2)) {
+			System.out.println("Player 1 wins");
+			SpaceEvaders.gameOver = true;
+		}
+		
 		this.rotate(SpaceEvaders.getCounter());
 		
 		int[] x2 = new int[this.getPoints().length];
@@ -74,25 +84,83 @@ public class BlackHole extends Polygon {
 		return hitbox;
 	}
 	
+	public boolean checkCollision(Polygon polygon) {
+		
+		Point[] polygonPoints = polygon.getPoints();
+		Point[] blackHolePoints = this.getHitbox().getPoints();
+		
+		for (Point point : polygonPoints) {
+			if (this.getHitbox().contains(point)) {
+				return true;
+			}
+		}
+		for (Point point : blackHolePoints) {
+			if (polygon.contains(point)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	private void handleGravity() {
 		for (Polygon object : objects) {
-			double distance = Point.distanceBetween(
-				object.findCenter(), this.findCenter()
-			);
-			
 			if (object instanceof Spaceship) {
+				double distance = Point.distanceBetween(
+						new Point(
+							object.position.x + Spaceship.SIZE / 2,
+							object.position.y + Spaceship.SIZE / 2
+						)
+						, 
+						new Point(
+							this.position.x + 6 * SIZE,
+							this.position.y + 6 * SIZE
+						)
+					);
+				
+				double totalInfluence = GRAVITATION / Math.pow(distance, 2);
+				
+				double yDistance = object.position.y - this.position.y;
+				double xDistance = object.position.x - this.position.x;
+				
+				double theta = Math.atan2(yDistance, xDistance);
 				
 				Point accelerate = new Point(
-					GRAVITATION / (Math.pow(distance, 2)), 
-					GRAVITATION / (Math.pow(distance, 2))
+					-totalInfluence * Math.cos(theta),
+					-totalInfluence * Math.sin(theta)
 				);
+				((Spaceship)object).blackHoleAccelerate(accelerate);
+				((Spaceship)object).accelerateProjectiles();
 				
 				
-				
-				((Spaceship) object).accelerate(accelerate);
+				// Implement the same thing for all spaceship projectiles
 			}
-			
+			else if (object instanceof Asteroid) {
+				double distance = Point.distanceBetween(
+						new Point(
+							object.position.x + Asteroid.SIZE / 2,
+							object.position.y + Asteroid.SIZE / 2
+						)
+						, 
+						new Point(
+							this.position.x + 6 * SIZE,
+							this.position.y + 6 * SIZE
+						)
+					);
+				
+				double totalInfluence = GRAVITATION / Math.pow(distance, 2);
+				
+				double yDistance = object.position.y - this.position.y;
+				double xDistance = object.position.x - this.position.x;
+				
+				double theta = Math.atan2(yDistance, xDistance);
+				
+				Point accelerate = new Point(
+					-totalInfluence * Math.cos(theta),
+					-totalInfluence * Math.sin(theta)
+				);
+				((Asteroid)object).accelerate(accelerate);
+			}
 		}
 		
 	}

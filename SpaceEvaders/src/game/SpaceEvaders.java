@@ -8,20 +8,21 @@ NOTE: This class is the metaphorical "main method" of your program,
 
 */
 import java.awt.*;
-import java.awt.event.*;
 
+@SuppressWarnings("serial")
 class SpaceEvaders extends Game {
 	public static int counter = 0;
 	public static final int WIDTH = 800;
 	public static final int LENGTH = 600;
 	
-	private static final int TIMESPAWNBLACKHOLE = 10;
+	private static final int TIMESPAWNASTEROID = 1500;
+	private static final int TIMESPAWNBLACKHOLE = 1000;
 
 	private BorderGenerator borderGen;
 	private static Polygon borderHitbox;
 	public static boolean gameOver = false;
-	public static Spaceship thing1 = new Spaceship(new Point(300, 300), 0);
-	public static Spaceship thing2 = new Spaceship(new Point(600, 300), 0);
+	public static Spaceship thing1 = new Spaceship(new Point(WIDTH / 4, LENGTH / 2), 0);
+	public static Spaceship thing2 = new Spaceship(new Point(WIDTH * 3/4, LENGTH / 2), 0);
 	public static BlackHole blackhole = null;
 	
 	
@@ -47,7 +48,7 @@ class SpaceEvaders extends Game {
 		this.addKeyListener(thing2);
 		
 		BlackHole.objects.add(thing1);
-		BlackHole.objects.add(thing1);
+		BlackHole.objects.add(thing2);
 	}
 	
 	public static Polygon getBorderHitbox() {
@@ -59,17 +60,13 @@ class SpaceEvaders extends Game {
 			brush.setColor(Color.black);
 			brush.fillRect(0,0,width,height);
 			
-			// sample code for printing message for debugging
-			// counter is incremented and this message printed
-			// each time the canvas is repainted
-			
 			borderGen.generateBorder(brush);
 			
 			brush.setColor(Color.white);
 			thing1.paint(brush);
 			thing2.paint(brush);
 			
-			if (counter % 100 == 0) {
+			if (counter % 100 == 0 && counter >= TIMESPAWNASTEROID) {
 				Asteroid.summonAsteroid();
 			}
 			
@@ -86,15 +83,7 @@ class SpaceEvaders extends Game {
 				}
 			}
 			
-//			for (int i = 0; i < borderHitbox.getPoints().length; i++) {
-//				System.out.println(borderHitbox.getPoints()[i]);
-//			}
-			
-			/*
-			 * the comment below is just me messing with the code before we meet
-			 * officially on friday
-			 * feel free to delete it or something it doesn't do anything important
-			 */
+			brush.setColor(Color.WHITE);
 			brush.drawString("Counter: " + counter + " Time: " + Integer.toString(counter / 60) + ":" + Integer.toString(counter % 60 * 5 / 3), 10, 10);	
 			counter++;
 		}
